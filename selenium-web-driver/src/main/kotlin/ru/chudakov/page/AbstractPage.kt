@@ -8,12 +8,14 @@ abstract class AbstractPage(private val driver: WebDriver) {
     abstract val pageUrl: String
 
     init {
-        PageFactory.initElements(driver, this);
+        initElements();
     }
 
-    fun open() = driver.get(pageUrl)
-
-    fun verifyUrl(currentUrl: String) {
-        WebDriverWait(driver, 10)
+    private fun initElements() {
+        PageFactory.initElements(driver, this)
     }
+
+//    fun verifyUrl() {
+//        WebDriverWait(driver, 10).until { it.currentUrl == pageUrl }
+//    }
 }
