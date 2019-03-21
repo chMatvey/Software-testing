@@ -15,7 +15,13 @@ abstract class AbstractPage(private val driver: WebDriver) {
         PageFactory.initElements(driver, this)
     }
 
-//    fun verifyUrl() {
-//        WebDriverWait(driver, 10).until { it.currentUrl == pageUrl }
-//    }
+    fun open() {
+        if (!driver.currentUrl.startsWith(pageUrl)) {
+            driver.get(pageUrl)
+        }
+    }
+
+    fun verifyUrl(url: String = pageUrl): Boolean {
+        return driver.currentUrl.startsWith(url)
+    }
 }
