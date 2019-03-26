@@ -1,25 +1,23 @@
 package ru.chudakov
 
-import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
-import ru.chudakov.page.MainPage
-import ru.chudakov.page.PresentationPage
-import ru.chudakov.page.SignInPage
-import ru.chudakov.page.SignUpPage
+import ru.chudakov.page.*
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "C:\\chromedriver_win32\\chromedriver.exe")
+    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
     val driver = ChromeDriver()
     val mainPage = MainPage(driver)
     val signInPage = SignInPage(driver)
     val signUpPage = SignUpPage(driver)
+    val createOrOpenPresentationPage = CreateOrOpenPresentationPage(driver)
     val presentationPage = PresentationPage(driver)
+    driver.quit()
 
 //    System.out.println(redirectSignInPageFromMainPageTest(mainPage, signInPage.pageUrl))
 //    System.out.println(signInAndSignUpPagesTest(signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage))
-    System.out.println(createNewPresentationTest(presentationPage))
+    System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
 }
 
 fun redirectSignInPageFromMainPageTest(mainPage: MainPage, signInPageUrl: String): String {
@@ -97,12 +95,22 @@ fun authorizationTest(signInPage: SignInPage): String {
     return "authorizationTest passed successfully"
 }
 
-fun createNewPresentationTest(presentationPage: PresentationPage) {
-    presentationPage.run {
+fun presentationPagesTest(createOrOpenPresentationPage: CreateOrOpenPresentationPage,
+                          presentationPage: PresentationPage): String {
+    createOrOpenPresentationPage.run {
         open()
-        createNewPresentationButton.click()
-        Thread.sleep(4000)
+        createOrOpenPresentationPage.createEmptyPresentationButton.click()
+        if (!verifyUrl(presentationPage.pageUrl))
+            return "Test failed, createEmptyPresentationButton doesn't function properly"
     }
-}
 
-fun
+    presentationPage.run {
+        for (button: WebElement in getDocsMenuButtons()) {
+            if (button.isEnabled && button.isDisplayed) button.click()
+            Thread.sleep(1000)
+        }
+        getDocsMenuSelects()
+    }
+
+    return "createNewPresentationTest passed successfully"
+}
