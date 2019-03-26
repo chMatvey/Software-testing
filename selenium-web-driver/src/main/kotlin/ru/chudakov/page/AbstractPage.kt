@@ -7,8 +7,10 @@ import org.openqa.selenium.support.ui.WebDriverWait
 abstract class AbstractPage(private val driver: WebDriver) {
     abstract val pageUrl: String
 
+    protected val wait = WebDriverWait(driver, 5)
+
     init {
-        initElements();
+        initElements()
     }
 
     private fun initElements() {
@@ -19,9 +21,11 @@ abstract class AbstractPage(private val driver: WebDriver) {
         if (!driver.currentUrl.startsWith(pageUrl)) {
             driver.get(pageUrl)
         }
+        wait.until { it.currentUrl.startsWith(pageUrl) }
     }
 
-    fun verifyUrl(url: String = pageUrl): Boolean {
+    fun checkUrl(url: String = pageUrl): Boolean {
         return driver.currentUrl.startsWith(url)
     }
 }
+

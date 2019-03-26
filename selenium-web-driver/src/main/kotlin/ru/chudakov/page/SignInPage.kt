@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy
 import kotlin.coroutines.coroutineContext
 
 class SignInPage(private val driver: WebDriver) : AbstractPage(driver) {
-    override val pageUrl = "https://accounts.google.com/signin/v2/sl/pwd?service=wise&passive=1209600&continue=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides"
+    override val pageUrl = "https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides&followup=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides"
 
     @FindBy(xpath = "//*[@id=\"identifierId\"]")
     lateinit var emailInput: WebElement
@@ -20,12 +20,37 @@ class SignInPage(private val driver: WebDriver) : AbstractPage(driver) {
     @FindBy(xpath = "//*[@id=\"passwordNext\"]")
     lateinit var nextPasswordButton: WebElement
 
-    @FindBy(css = "#ow241")
+    @FindBy(css = "#ow242")
     lateinit var signUpButton: WebElement
 
     @FindBy(xpath = "//*[@id=\"initialView\"]/div[2]/div[3]/div")
-    lateinit var createAccountForYouButton: WebElement
+    lateinit var createAccountForYourselfButton: WebElement
 
     @FindBy(xpath = "//*[@id=\"view_container\"]/div/div/div[2]/div/div[1]/div/form/content/section/div/content/div[1]/div/div[2]")
     lateinit var accountDoesNotExist: WebElement
+
+    fun redirectToSignUpPage(signUpPageUrl: String) {
+        signUpButton.click()
+        wait
+                .withMessage("signUpButton does not work")
+                .until { createAccountForYourselfButton.isDisplayed }
+        createAccountForYourselfButton.click()
+        wait
+                .withMessage("Redirect to signUp page does not work")
+                .until { checkUrl(signUpPageUrl) }
+    }
+
+    fun signIn(resultPageUrl: String) {
+        emailInput.sendKeys(System.getenv("google_login"))
+        nextEmailButton.click()
+        wait
+                .withMessage("NextEmailButton does not work")
+                .until { passwordInput.isDisplayed }
+
+        passwordInput.sendKeys(System.getenv("google_password"))
+        nextPasswordButton.click()
+        wait
+                .withMessage("NextPasswordButton does not work")
+                .until { it.currentUrl.startsWith(resultPageUrl) }
+    }
 }

@@ -9,4 +9,11 @@ class CreateOrOpenPresentationPage(private val driver: WebDriver) : AbstractPage
 
     @FindBy(xpath = "//*[@id=\":1e\"]/div[1]")
     lateinit var createEmptyPresentationButton: WebElement
+
+    fun createEmptyPresentation(presentationPageUrl: String) {
+        createEmptyPresentationButton.click()
+        wait
+                .withMessage("")
+                .until { checkUrl(presentationPageUrl) }
+    }
 }
