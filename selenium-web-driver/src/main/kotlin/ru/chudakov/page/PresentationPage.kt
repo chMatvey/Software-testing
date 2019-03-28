@@ -34,14 +34,6 @@ class PresentationPage(private val driver: WebDriver) : AbstractPage(driver) {
                 .filter { webElement -> webElement.isEnabled && webElement.isDisplayed }
     }
 
-    fun getDocsMenuSelects(): List<WebElement> {
-        val selects = driver.findElements(By.xpath("/html/body/div"))
-        System.out.println(selects[32].getAttribute("class"))
-        System.out.println(selects[33].getAttribute("class"))
-        System.out.println(selects[34].getAttribute("class"))
-        return selects
-    }
-
     fun clickDocsMenuButtons() {
         val buttons = getDocsMenuButtons()
         for (button in buttons) {

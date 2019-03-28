@@ -9,7 +9,7 @@ import ru.chudakov.page.*
 import java.lang.Exception
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "c:\\chromedriver_win32\\chromedriver.exe")
+    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
     val driver = ChromeDriver()
     driver.manage().window().maximize()
     val slidesPage = SlidesPage(driver)
@@ -18,16 +18,19 @@ fun main() {
     val createOrOpenPresentationPage = CreateOrOpenPresentationPage(driver)
     val presentationPage = PresentationPage(driver)
 
+//    System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
+//    System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
+
     try {
-        //System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
-        //System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
+        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
+        System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
         System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
         System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
     } catch (exception: TimeoutException) {
         System.out.println("Test failed")
         System.out.println(exception.message)
     } finally {
-        //driver.quit()
+        driver.quit()
     }
 }
 
@@ -54,6 +57,7 @@ fun signInAndSignUpPageTest(signInPage: SignInPage, signUpPage: SignUpPage): Str
     }
 
     signUpPage.run {
+        open()
         inputNameAndSurname()
         inputLatinCharsToUserNameInput()
     }

@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy
 import kotlin.coroutines.coroutineContext
 
 class SignInPage(private val driver: WebDriver) : AbstractPage(driver) {
-    override val pageUrl = "https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides&followup=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides"
+    override val pageUrl = "https://accounts.google.com/signin/v2/identifier"
 
     @FindBy(xpath = "//*[@id=\"identifierId\"]")
     lateinit var emailInput: WebElement
@@ -20,7 +20,7 @@ class SignInPage(private val driver: WebDriver) : AbstractPage(driver) {
     @FindBy(xpath = "//*[@id=\"passwordNext\"]")
     lateinit var nextPasswordButton: WebElement
 
-    @FindBy(css = "#ow242")
+    @FindBy(xpath = "/html/body/div[1]/div[1]/div[2]/div[2]/div/div/div[2]/div/div[2]/div/div[2]/div/div/content/span")
     lateinit var signUpButton: WebElement
 
     @FindBy(xpath = "//*[@id=\"initialView\"]/div[2]/div[3]/div")
