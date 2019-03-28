@@ -3,8 +3,13 @@ package ru.chudakov.page
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
+import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.WebDriverWait
+import java.util.function.Function
 
-class SignUpPage(private val driver: WebDriver) : AbstractPage(driver) {
+class SignUpPage(private val driver: WebDriver, private val wait: WebDriverWait) :
+        AbstractPage(driver, wait) {
     override val pageUrl = "https://accounts.google.com/signup/v2/webcreateaccount"
 
     @FindBy(xpath = "//*[@id=\"firstName\"]")
@@ -41,6 +46,8 @@ class SignUpPage(private val driver: WebDriver) : AbstractPage(driver) {
     lateinit var userNameMustContainMinSixCharsDiv: WebElement
 
     fun inputNameAndSurname(name: String = "name", surname: String = "surname") {
+        nameInput.clear()
+        surnameInput.clear()
         nameInput.sendKeys(name)
         surnameInput.sendKeys(surname)
     }
@@ -48,19 +55,19 @@ class SignUpPage(private val driver: WebDriver) : AbstractPage(driver) {
     fun inputLatinCharsToUserNameInput() {
         userNameInput.clear()
         userNameInput.sendKeys("Пользователь")
-        nextButton.click()
-        wait
-                .withMessage("")
-                .until { userNameMustContainOnlyLatinCharsDiv.isDisplayed }
     }
 
     fun inputShortUserName() {
         userNameInput.clear()
         userNameInput.sendKeys("user")
-        nextButton.click()
-        wait
-                .withMessage("")
-                .until { userNameMustContainMinSixCharsDiv.isDisplayed }
+        Thread.sleep(1000)
+    }
+
+    fun inputPassword(password: String = "Pasword12345QwertY") {
+        passwordInput.clear()
+        confirmPasswordInput.clear()
+        passwordInput.sendKeys(password)
+        confirmPasswordInput.sendKeys(password)
     }
 
     fun inputShortPassword() {
@@ -68,10 +75,6 @@ class SignUpPage(private val driver: WebDriver) : AbstractPage(driver) {
         confirmPasswordInput.clear()
         passwordInput.sendKeys("word")
         confirmPasswordInput.sendKeys("word")
-        nextButton.click()
-        wait
-                .withMessage("")
-                .until { passwordMustBeEightCharOrMoreDiv.isDisplayed }
     }
 
     fun inputNotEqualPasswords() {
@@ -79,10 +82,12 @@ class SignUpPage(private val driver: WebDriver) : AbstractPage(driver) {
         confirmPasswordInput.clear()
         passwordInput.sendKeys("password1")
         confirmPasswordInput.sendKeys("password")
+    }
+
+    fun clickNextButton(condition: ExpectedCondition<List<WebElement>>) {
+        wait.until(ExpectedConditions.visibilityOf(nextButton))
         nextButton.click()
-        wait
-                .withMessage("")
-                .until { passwordMustBeMatchDiv.isDisplayed }
+        wait.until(condition)
     }
 }
 

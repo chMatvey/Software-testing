@@ -4,34 +4,41 @@ import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.support.ui.ExpectedCondition
+import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.page.*
 import java.lang.Exception
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
+    System.setProperty("webdriver.chrome.driver", "c:\\chromedriver_win32\\chromedriver.exe")
     val driver = ChromeDriver()
     driver.manage().window().maximize()
-    val slidesPage = SlidesPage(driver)
-    val signInPage = SignInPage(driver)
-    val signUpPage = SignUpPage(driver)
-    val createOrOpenPresentationPage = CreateOrOpenPresentationPage(driver)
-    val presentationPage = PresentationPage(driver)
 
-//    System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
-//    System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
+    val wait = WebDriverWait(driver, 10)
 
-    try {
-        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
-        System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
-        System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
-        System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
-    } catch (exception: TimeoutException) {
-        System.out.println("Test failed")
-        System.out.println(exception.message)
-    } finally {
-        driver.quit()
-    }
+    val slidesPage = SlidesPage(driver, wait)
+    val signInPage = SignInPage(driver, wait)
+    val signUpPage = SignUpPage(driver, wait)
+    val createOrOpenPresentationPage = CreateOrOpenPresentationPage(driver, wait)
+    val presentationPage = PresentationPage(driver, wait)
+
+    //System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
+    //System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
+    System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
+    System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
+
+//    try {
+////        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
+////        System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
+//        System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
+//        System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
+//    } catch (exception: TimeoutException) {
+//        System.out.println("Test failed")
+//        System.out.println(exception.message)
+//    } finally {
+//        driver.quit()
+//    }
 }
 
 fun slidesPageTest(slidesPage: SlidesPage, signInPageUrl: String): String {
@@ -60,6 +67,19 @@ fun signInAndSignUpPageTest(signInPage: SignInPage, signUpPage: SignUpPage): Str
         open()
         inputNameAndSurname()
         inputLatinCharsToUserNameInput()
+        inputShortPassword()
+        clickNextButton(ExpectedConditions.visibilityOfAllElements(passwordMustBeEightCharOrMoreDiv))
+
+        inputNotEqualPasswords()
+        clickNextButton(ExpectedConditions.visibilityOfAllElements(passwordMustBeMatchDiv))
+
+        inputPassword()
+        clickNextButton(ExpectedConditions.visibilityOfAllElements(userNameMustContainOnlyLatinCharsDiv))
+
+        inputShortUserName()
+        clickNextButton(ExpectedConditions.visibilityOfAllElements(userNameMustContainMinSixCharsDiv))
+
+        signInButton.click()
     }
     return "SignInAndSignUpPageTest passed successfully"
 }

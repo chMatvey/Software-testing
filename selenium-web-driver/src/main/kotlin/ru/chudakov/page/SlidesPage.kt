@@ -5,7 +5,8 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
 
-class SlidesPage(driver: WebDriver) : AbstractPage(driver) {
+class SlidesPage(driver: WebDriver, private val wait: WebDriverWait) :
+        AbstractPage(driver, wait) {
     override val pageUrl = "https://www.google.com/intl/ru_ru/slides/about"
 
     @FindBy(xpath = "//*[@id=\"section-intro\"]/div[2]/div/div/a")
