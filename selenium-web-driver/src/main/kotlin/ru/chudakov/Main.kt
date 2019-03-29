@@ -15,7 +15,7 @@ fun main() {
     val driver = ChromeDriver()
     driver.manage().window().maximize()
 
-    val wait = WebDriverWait(driver, 10)
+    val wait = WebDriverWait(driver, 5)
 
     val slidesPage = SlidesPage(driver, wait)
     val signInPage = SignInPage(driver, wait)
@@ -92,7 +92,8 @@ fun presentationPagesTest(createOrOpenPresentationPage: CreateOrOpenPresentation
     }
 
     presentationPage.run {
-        clickDocsMenuButtons()
+        //clickDocsMenuButtons()
+        createNewSlideAndClickUndoRedoButtons()
     }
 
     return "CreateNewPresentationTest passed successfully"
