@@ -6,8 +6,7 @@ import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
 import kotlin.coroutines.coroutineContext
 
-class SignInPage(private val driver: WebDriver, private val wait: WebDriverWait) :
-        AbstractPage(driver, wait) {
+class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://accounts.google.com/signin/v2/identifier?service=wise&passive=1209600&continue=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides"
 
     @FindBy(xpath = "//*[@id=\"identifierId\"]")

@@ -5,8 +5,7 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
 
-class CreateOrOpenPresentationPage(private val driver: WebDriver, private val wait: WebDriverWait) :
-        AbstractPage(driver, wait) {
+class CreateOrOpenPresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://docs.google.com/presentation/u/0/";
 
     @FindBy(xpath = "//*[@id=\":1e\"]/div[1]")

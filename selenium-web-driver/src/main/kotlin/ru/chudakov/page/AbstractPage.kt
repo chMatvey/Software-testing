@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.PageFactory
 import org.openqa.selenium.support.ui.WebDriverWait
 
-abstract class AbstractPage(private val driver: WebDriver, private val wait: WebDriverWait) {
+abstract class AbstractPage(protected val driver: WebDriver, protected val wait: WebDriverWait) {
     abstract val pageUrl: String
 
     init {

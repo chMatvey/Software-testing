@@ -8,8 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.util.function.Function
 
-class SignUpPage(private val driver: WebDriver, private val wait: WebDriverWait) :
-        AbstractPage(driver, wait) {
+class SignUpPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://accounts.google.com/signup/v2/webcreateaccount"
 
     @FindBy(xpath = "//*[@id=\"firstName\"]")

@@ -93,7 +93,10 @@ fun presentationPagesTest(createOrOpenPresentationPage: CreateOrOpenPresentation
 
     presentationPage.run {
         //clickDocsMenuButtons()
-        createNewSlideAndClickUndoRedoButtons()
+        //createNewSlide()
+        //zoomButtonsClick()
+        //textBoxButtonClick()
+        insertImageMenuButtonClick()
     }
 
     return "CreateNewPresentationTest passed successfully"
