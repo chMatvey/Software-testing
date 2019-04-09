@@ -8,8 +8,7 @@ import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.util.*
-import kotlin.collections.HashMap
+import ru.chudakov.getElementsByIndexes
 
 class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://docs.google.com/presentation/d";
@@ -50,12 +49,65 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
     @FindBy(xpath = "//*[@id=\"insertImageMenuButton\"]")
     lateinit var insertImageMenuButton: WebElement
 
+    @FindBy(xpath = "//*[@id=\"shapeButton\"]")
+    lateinit var shapeButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"lineMenuButton\"]")
+    lateinit var lineMenuButton: WebElement
+
     @FindBy(xpath = "//*[@id=\"insertCommentButton\"]")
     lateinit var insertCommentButton: WebElement
 
+    @FindBy(xpath = "//*[@id=\"slideBackgroundButton\"]")
+    lateinit var slideBackgroundButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"slideLayoutMenuButton\"]")
+    lateinit var slideLayoutMenuButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"slideThemeButton\"]")
+    lateinit var slideThemeButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"slideTransitionButton\"]")
+    lateinit var slideTransitionButton: WebElement
+
+    private val dropDownButtonFilters = listOf<(WebElement) -> Boolean>(
+            { it.getAttribute("class") == "goog-menuitem apps-menuitem" },
+            { true },
+            { it.getAttribute("class") == "goog-menuitem apps-menuitem goog-option" },
+            { true },
+            { true },
+            { true },
+            { true },
+            { true },
+            { true },
+            { it.getAttribute("class") == "goog-menuitem apps-menuitem" }
+    )
+
+    private val dropDownButtonWaits = listOf<(WebDriver) -> Boolean>(
+            {
+                !it.findElements(By.xpath("//div[@role='dialog']"))
+                        .none { webElement ->
+                            webElement.isDisplayed && webElement.getAttribute("aria-hidden") != "true"
+                        } ||
+                        it.findElement(By.xpath("//*[@id=\"docs-parent-collections-container-outer\"]"))
+                                .isDisplayed
+            },
+            { true },
+            { true },
+            { true },
+            { true },
+            { true },
+            { true },
+            { true },
+            { true },
+            { !it.findElements(By.xpath("//*[@id=\"dialog\"]")).isEmpty() ||
+            !it.findElements(By.xpath("/html/body/div[2]/div/div")).isEmpty()
+            !it.findElements(By.xpath("/html/body/div[40]")).isEmpty()}
+    )
+
     fun clickDocsMenuButtons() {
         val docsButtons = getDocsMenuButtons()
-        val docsDropDowns = ArrayList<WebElement>()
+        val docsDropDowns = mutableListOf<WebElement>()
 
         val byXpath = By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material docs-menu-hide-mnemonics']")
         val byXpathExtensions = By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel docs-menu-hide-mnemonics']")
@@ -88,38 +140,52 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
         }
         action.sendKeys(Keys.ESCAPE).build().perform()
 
-        for (dropDown in docsDropDowns) {
-            docsButtons.get(docsDropDowns.indexOf(dropDown)).click()
-            val buttonsFromDropDowns = dropDown.findElements(By.xpath("div"))
-                    .filter { webElement ->
-                        webElement.getAttribute("class") == "goog-menuitem apps-menuitem" &&
-                                webElement.getAttribute("id") != ":gd" && webElement.getAttribute("id") != ":ge"
-                    }.toSet()
+        /// 1 dropDown is 0
+        val indexes = listOf(9)
+        for (dropDown in docsDropDowns.getElementsByIndexes(indexes)) {
+            docsButtons[docsDropDowns.indexOf(dropDown)].click()
+            val dropDownButtons = dropDown.findElements(By.xpath("div"))
+                    .filter(dropDownButtonFilters[docsDropDowns.indexOf(dropDown)])
+                    .toMutableList()
+
+            filterDropDownButtons(dropDownButtons)
+
             action.sendKeys(Keys.ESCAPE).build().perform()
 
-            val docsButton = docsButtons.get(docsDropDowns.indexOf(dropDown))
+            val docsButton = docsButtons[docsDropDowns.indexOf(dropDown)]
 
-            for (button in buttonsFromDropDowns) {
-                Thread.sleep(1000)
-                wait.until(ExpectedConditions.visibilityOf(docsButton))
-                docsButton.click()
+            for (button in dropDownButtons) {
+                when (docsButtons.indexOf(docsButton)) {
+                    0, 7, 8, 9 -> {
+                        wait.until(ExpectedConditions.visibilityOf(docsButton))
+                        docsButton.click()
 
-                Thread.sleep(1000)
-                wait.until(ExpectedConditions.visibilityOf(button))
-                button.click()
+                        wait.until(ExpectedConditions.visibilityOf(button))
+                        button.click()
 
-                wait.until {
-                    !driver.findElements(By.xpath("//div[@role='dialog']")).none { webElement -> webElement.isDisplayed && webElement.getAttribute("aria-hidden") != "true" }
-                            || driver.findElement(By.xpath("//*[@id=\"docs-parent-collections-container-outer\"]")).isDisplayed
+                        wait.until(dropDownButtonWaits[docsDropDowns.indexOf(dropDown)])
+
+                        action.sendKeys(Keys.ESCAPE).build().perform()
+                        Thread.sleep(500)
+                        //action.sendKeys(Keys.ESCAPE).build().perform()
+                    }
+                    2 -> {
+                        wait.until(ExpectedConditions.visibilityOf(docsButton))
+                        docsButton.click()
+                        wait.until(ExpectedConditions.visibilityOf(button))
+                        button.click()
+                        action.sendKeys(Keys.ESCAPE).build().perform()
+                        Thread.sleep(500)
+
+                        wait.until(ExpectedConditions.visibilityOf(docsButton))
+                        docsButton.click()
+                        wait.until(ExpectedConditions.visibilityOf(button))
+                        button.click()
+                        action.sendKeys(Keys.ESCAPE).build().perform()
+                        Thread.sleep(500)
+                    }
                 }
-                Thread.sleep(1000)
-
-                action.sendKeys(Keys.ESCAPE).build().perform()
-                Thread.sleep(1000)
-                action.sendKeys(Keys.ESCAPE).build().perform()
             }
-            System.out.println("One iteration")
-            Thread.sleep(2000)
         }
     }
 
@@ -155,8 +221,8 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
         zoomButtonDropdown.click()
 
         val byDropdown = By.xpath("")
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]")))
-        driver.findElement(By.xpath("//*[@id=\":fp\"]")).click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material'][2]")))
+        driver.findElement(By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material'][2]/div[1]")).click()
     }
 
     fun textBoxButtonClick() {
@@ -188,8 +254,36 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
         action.sendKeys(Keys.ESCAPE).build().perform()
     }
 
-    fun insertCommentButtonClick() {
+    fun shapeAndLineButtonsClick() {
+        shapeButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[44]")))
+        insertCommentButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[48]")))
+    }
 
+    fun insertCommentButtonClick() {
+        insertCommentButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]")))
+        driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]/div/div[2]/textarea"))
+                .sendKeys("Comment")
+        driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]/div[1]/div[2]/div[7]/div[1]"))
+                .click()
+    }
+
+    fun slideButtonsClick() {
+        slideBackgroundButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='modal-dialog']")))
+        driver.findElement(By.xpath("/html/body/div[@class='modal-dialog']//span[2]")).click()
+
+        slideLayoutMenuButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div/table[@class='goog-palette-table']")))
+        driver.findElement(By.xpath("//div/table[@class='goog-palette-table']/tbody/tr[4]/td[1]")).click()
+
+        slideThemeButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='punch-theme-sidebar docs-material']")))
+
+        slideTransitionButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='punch-animation-sidebar docs-material']")))
     }
 
     private fun getDocsMenuButtons(): List<WebElement> {
@@ -199,5 +293,13 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
 
     private fun getSlides(): List<WebElement> {
         return driver.findElements(By.cssSelector("#filmstrip > div > svg > g"))
+    }
+
+    private fun filterDropDownButtons(buttons: MutableList<WebElement>) {
+        if (buttons.size == 10) {
+            buttons.removeAt(9)
+            buttons.removeAt(8)
+            buttons.removeAt(0)
+        }
     }
 }

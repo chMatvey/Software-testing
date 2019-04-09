@@ -92,12 +92,20 @@ fun presentationPagesTest(createOrOpenPresentationPage: CreateOrOpenPresentation
     }
 
     presentationPage.run {
-        //clickDocsMenuButtons()
-        //createNewSlide()
-        //zoomButtonsClick()
-        //textBoxButtonClick()
-        insertImageMenuButtonClick()
+        clickDocsMenuButtons()
+//        createNewSlide()
+//        zoomButtonsClick()
+//        textBoxButtonClick()
+//        insertImageMenuButtonClick()
+//        insertCommentButtonClick()
+//        slideButtonsClick()
     }
 
     return "CreateNewPresentationTest passed successfully"
+}
+
+fun<T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
+    val result = mutableListOf<T>()
+    indexes.forEach { i -> result.add(this[i]) }
+    return result
 }
