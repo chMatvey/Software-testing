@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.net.PasswordAuthentication
 import kotlin.coroutines.coroutineContext
 
 class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
@@ -28,7 +29,10 @@ class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, 
     lateinit var createAccountForYourselfButton: WebElement
 
     @FindBy(xpath = "//*[@id=\"view_container\"]/div/div/div[2]/div/div[1]/div/form/content/section/div/content/div[1]/div/div[2]")
-    lateinit var accountDoesNotExist: WebElement
+    lateinit var accountDoesNotExistDiv: WebElement
+
+    @FindBy(xpath = "//*[@id=\"password\"]/div[2]/div[2]/div")
+    lateinit var passwordIsNotRightDiv: WebElement
 
     fun redirectToSignUpPage(signUpPageUrl: String) {
         signUpButton.click()
@@ -41,17 +45,30 @@ class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, 
                 .until { checkUrl(signUpPageUrl) }
     }
 
-    fun signIn(resultPageUrl: String) {
+    fun inputRightLogin() {
+        emailInput.clear()
         emailInput.sendKeys(System.getenv("google_login"))
         nextEmailButton.click()
-        wait
-                .withMessage("NextEmailButton does not work")
-                .until { passwordInput.isDisplayed }
+        wait.withMessage("NextEmailButton does not work").until { passwordInput.isDisplayed }
+    }
 
+    fun inputRightPassword(resultPageUrl: String) {
         passwordInput.sendKeys(System.getenv("google_password"))
         nextPasswordButton.click()
-        wait
-                .withMessage("NextPasswordButton does not work")
-                .until { it.currentUrl.startsWith(resultPageUrl) }
+        wait.withMessage("NextPasswordButton does not work").until { it.currentUrl.startsWith(resultPageUrl) }
+    }
+
+    fun inputUnExistLogin() {
+        emailInput.sendKeys("mmmmmmmmmmmmmm")
+        nextEmailButton.click()
+        wait.until { accountDoesNotExistDiv.isDisplayed }
+        emailInput.clear()
+    }
+
+    fun inputNotRightPassword() {
+        passwordInput.sendKeys("password")
+        nextPasswordButton.click()
+        wait.until { passwordIsNotRightDiv.isDisplayed }
+        passwordInput.clear()
     }
 }

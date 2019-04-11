@@ -23,10 +23,9 @@ fun main() {
     val createOrOpenPresentationPage = CreateOrOpenPresentationPage(driver, wait)
     val presentationPage = PresentationPage(driver, wait)
 
-    //System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
-    //System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
+    //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
-    System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
+    //System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
 
 //    try {
 ////        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
@@ -41,23 +40,12 @@ fun main() {
 //    }
 }
 
-fun slidesPageTest(slidesPage: SlidesPage, signInPageUrl: String): String {
+fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
     slidesPage.run {
         open()
-        redirectToSignInPage(signInPageUrl)
+        redirectToSignInPage(signInPage.pageUrl)
     }
-    return "SlidesPageTest passed successfully"
-}
 
-fun authorizationTest(signInPage: SignInPage, resultPageUrl: String): String {
-    signInPage.run {
-        open()
-        signIn(resultPageUrl)
-    }
-    return "SignInPageTest passed successfully"
-}
-
-fun signInAndSignUpPageTest(signInPage: SignInPage, signUpPage: SignUpPage): String {
     signInPage.run {
         open()
         redirectToSignUpPage(signUpPage.pageUrl)
@@ -81,7 +69,18 @@ fun signInAndSignUpPageTest(signInPage: SignInPage, signUpPage: SignUpPage): Str
 
         signInButton.click()
     }
-    return "SignInAndSignUpPageTest passed successfully"
+    return "Registration test passed successfully"
+}
+
+fun authorizationTest(signInPage: SignInPage, resultPageUrl: String): String {
+    signInPage.run {
+        open()
+        inputUnExistLogin()
+        inputRightLogin()
+        inputNotRightPassword()
+        inputRightPassword(resultPageUrl)
+    }
+    return "SignInPageTest passed successfully"
 }
 
 fun presentationPagesTest(createOrOpenPresentationPage: CreateOrOpenPresentationPage,
