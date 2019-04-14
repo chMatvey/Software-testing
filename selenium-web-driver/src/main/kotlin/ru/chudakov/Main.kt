@@ -11,7 +11,7 @@ import ru.chudakov.page.*
 import java.lang.Exception
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "c:\\chromedriver_win32\\chromedriver.exe")
+    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
     val driver = ChromeDriver()
     driver.manage().window().maximize()
 
@@ -20,12 +20,12 @@ fun main() {
     val slidesPage = SlidesPage(driver, wait)
     val signInPage = SignInPage(driver, wait)
     val signUpPage = SignUpPage(driver, wait)
-    val createOrOpenPresentationPage = CreateOrOpenPresentationPage(driver, wait)
+    val createPresentationPage = CreatePresentationPage(driver, wait)
     val presentationPage = PresentationPage(driver, wait)
 
     //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
-    System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
-    //System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
+    System.out.println(authorizationTest(signInPage, createPresentationPage))
+    System.out.println(createSlidesAndChangeThemesTest(presentationPage))
 
 //    try {
 ////        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
@@ -72,35 +72,27 @@ fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage:
     return "Registration test passed successfully"
 }
 
-fun authorizationTest(signInPage: SignInPage, resultPageUrl: String): String {
+fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePresentationPage): String {
     signInPage.run {
         open()
         inputUnExistLogin()
         inputRightLogin()
         inputNotRightPassword()
-        inputRightPassword(resultPageUrl)
+        inputRightPassword(createPresentationPage.pageUrl)
     }
-    return "SignInPageTest passed successfully"
+
+    createPresentationPage.run {
+        open()
+        createEmptyPresentation()
+    }
+    return "AuthorizationTest passed successfully"
 }
 
-fun presentationPagesTest(createOrOpenPresentationPage: CreateOrOpenPresentationPage,
-                          presentationPage: PresentationPage): String {
-    createOrOpenPresentationPage.run {
-        open()
-        createEmptyPresentation(presentationPage.pageUrl)
-    }
-
+fun createSlidesAndChangeThemesTest(presentationPage: PresentationPage): String {
     presentationPage.run {
-        clickDocsMenuButtons()
-//        createNewSlide()
-//        zoomButtonsClick()
-//        textBoxButtonClick()
-//        insertImageMenuButtonClick()
-//        insertCommentButtonClick()
-//        slideButtonsClick()
     }
 
-    return "CreateNewPresentationTest passed successfully"
+    return "CreateSlidesAndChangeThemesTest passed successfully"
 }
 
 fun<T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
