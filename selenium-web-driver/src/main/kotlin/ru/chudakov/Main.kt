@@ -11,11 +11,11 @@ import ru.chudakov.page.*
 import java.lang.Exception
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
+    System.setProperty("webdriver.chrome.driver", "c:\\chromedriver_win32\\chromedriver.exe")
     val driver = ChromeDriver()
     driver.manage().window().maximize()
 
-    val wait = WebDriverWait(driver, 5)
+    val wait = WebDriverWait(driver, 10 )
 
     val slidesPage = SlidesPage(driver, wait)
     val signInPage = SignInPage(driver, wait)
@@ -25,7 +25,8 @@ fun main() {
 
     //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage, createPresentationPage))
-    System.out.println(createSlidesAndChangeBackground(presentationPage))
+    //System.out.println(createSlidesAndChangeBackground(presentationPage))
+    System.out.println(changeLayoutAndTheme(presentationPage))
 
 //    try {
 ////        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
@@ -95,6 +96,14 @@ fun createSlidesAndChangeBackground(presentationPage: PresentationPage): String 
     }
 
     return "CreateSlidesAndChangeThemesTest passed successfully"
+}
+
+fun changeLayoutAndTheme(presentationPage: PresentationPage): String {
+    presentationPage.run {
+        slidesMenu.changeLayout()
+    }
+
+    return "ChangeLayoutAndTheme passed successfully"
 }
 
 fun<T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {

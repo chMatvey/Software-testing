@@ -68,13 +68,13 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         val countSlides = getSlides().count()
 
         newSlideButton.click()
-        wait.until { countSlides + 1 == getSlides().count() }
+        //wait.until { countSlides + 1 == getSlides().count() }
 
         undoButton.click()
-        wait.until { countSlides == getSlides().count() }
+        //wait.until { countSlides == getSlides().count() }
 
         redoButton.click()
-        wait.until { countSlides + 1 == getSlides().count() }
+        //wait.until { countSlides + 1 == getSlides().count() }
     }
 
     fun changeBackground() {
@@ -99,7 +99,9 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         reset.click()
 
         selectImage.click()
-        val insertUrl = driver.findElement(By.xpath("//*[@id=\":7\"]/div"))
+        wait.until { driver.findElement(By.xpath("/html/body/div[@class='picker modal-dialog picker-dialog']")) }
+        Thread.sleep(1000)
+        val insertUrl = driver.findElement(By.xpath("//div[@class='Nf-ml-oi Nf-ll-Zb-oi']"))
         wait.until { insertUrl.isDisplayed }
         insertUrl.click()
         val input = driver.findElement(By.xpath("//*[@id=\":v\"]"))
@@ -113,6 +115,25 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         toAll.click()
 
         ready.click()
+    }
+
+    fun changeLayout() {
+        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]"))
+        val trs = dropdown.findElements(By.xpath("/div/table/tbody/tr"))
+
+        val layouts = mutableListOf<WebElement>()
+        trs.forEach { layouts.addAll(it.findElements(By.xpath("/td"))) }
+
+        layouts.forEach { layout ->
+            slideLayoutMenuButton.click()
+            wait.until { dropdown.isDisplayed }
+            layout.click()
+            Thread.sleep(100)
+        }
+    }
+
+    fun changeThemes() {
+
     }
 
     fun printButtonClick() {
