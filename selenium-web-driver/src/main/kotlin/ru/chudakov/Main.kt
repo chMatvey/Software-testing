@@ -25,7 +25,7 @@ fun main() {
 
     //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage, createPresentationPage))
-    System.out.println(createSlidesAndChangeThemesTest(presentationPage))
+    System.out.println(createSlidesAndChangeBackground(presentationPage))
 
 //    try {
 ////        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
@@ -75,7 +75,7 @@ fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage:
 fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePresentationPage): String {
     signInPage.run {
         open()
-        inputUnExistLogin()
+        //inputUnExistLogin()
         inputRightLogin()
         inputNotRightPassword()
         inputRightPassword(createPresentationPage.pageUrl)
@@ -88,8 +88,10 @@ fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePres
     return "AuthorizationTest passed successfully"
 }
 
-fun createSlidesAndChangeThemesTest(presentationPage: PresentationPage): String {
+fun createSlidesAndChangeBackground(presentationPage: PresentationPage): String {
     presentationPage.run {
+        slidesMenu.createNewSlide()
+        slidesMenu.changeBackground()
     }
 
     return "CreateSlidesAndChangeThemesTest passed successfully"
