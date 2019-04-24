@@ -25,20 +25,9 @@ fun main() {
 
     //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage, createPresentationPage))
-    //System.out.println(createSlidesAndChangeBackground(presentationPage))
-    System.out.println(changeLayoutAndTheme(presentationPage))
-
-//    try {
-////        System.out.println(slidesPageTest(slidesPage, signInPage.pageUrl))
-////        System.out.println(signInAndSignUpPageTest(signInPage, signUpPage))
-//        System.out.println(authorizationTest(signInPage, createOrOpenPresentationPage.pageUrl))
-//        System.out.println(presentationPagesTest(createOrOpenPresentationPage, presentationPage))
-//    } catch (exception: TimeoutException) {
-//        System.out.println("Test failed")
-//        System.out.println(exception.message)
-//    } finally {
-//        driver.quit()
-//    }
+    ////System.out.println(createSlidesAndChangeBackground(presentationPage))
+    ////System.out.println(changeLayoutAndTheme(presentationPage))
+    System.out.println()
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -78,7 +67,7 @@ fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePres
         open()
         //inputUnExistLogin()
         inputRightLogin()
-        inputNotRightPassword()
+        //inputNotRightPassword()
         inputRightPassword(createPresentationPage.pageUrl)
     }
 

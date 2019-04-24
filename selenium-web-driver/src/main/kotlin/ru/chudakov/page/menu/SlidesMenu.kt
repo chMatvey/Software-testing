@@ -84,7 +84,7 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
         val dropdown = driver.findElement(By.xpath("//*[@id=\"punch-id-bg-color-button-container\"]/div"))
         val reset = driver.findElement(By.xpath("//*[@id=\"punch-id-bg-reset-button-container\"]/div"))
-        val ready = driver.findElement(By.xpath("/html/body/div[33]/div[3]/button[2]"))
+        val ready = driver.findElement(By.xpath("/html/body/div[35]/div[3]/button[2]"))
         val selectImage = driver.findElement(By.xpath("//*[@id=\"punch-id-bg-image-container\"]/div"))
 
         dropdown.click()
@@ -100,10 +100,11 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
         selectImage.click()
         wait.until { driver.findElement(By.xpath("/html/body/div[@class='picker modal-dialog picker-dialog']")) }
-        Thread.sleep(1000)
-        val insertUrl = driver.findElement(By.xpath("//div[@class='Nf-ml-oi Nf-ll-Zb-oi']"))
+        Thread.sleep(2000)
+        val insertUrl = driver.findElement(By.xpath("/html/body/div/div/div[4]/div[2]/div/div[1]/div[@class='Nf-ll-Zb-Df-Yb-uj']/div[1]/div[3]"))
         wait.until { insertUrl.isDisplayed }
         insertUrl.click()
+        Thread.sleep(4000)
         val input = driver.findElement(By.xpath("//*[@id=\":v\"]"))
         wait.until { input.isDisplayed }
         input.sendKeys("https://images.wallpaperscraft.ru/image/gepard_lezhat_dikaya_koshka_pyatnistyy_1182_1920x1080.jpg")
@@ -118,17 +119,21 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
     }
 
     fun changeLayout() {
-        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]"))
-        val trs = dropdown.findElements(By.xpath("/div/table/tbody/tr"))
+        slideLayoutMenuButton.click()
+        Thread.sleep(100)
+        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]"))
+        wait.until { dropdown.isDisplayed }
 
-        val layouts = mutableListOf<WebElement>()
-        trs.forEach { layouts.addAll(it.findElements(By.xpath("/td"))) }
+        val layouts = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]/div/table/tbody/tr/td"))
+        var size = layouts.size
 
-        layouts.forEach { layout ->
-            slideLayoutMenuButton.click()
+        while (size != 0) {
+            val layout = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]/div/table/tbody/tr/td"))[size - 1]
             wait.until { dropdown.isDisplayed }
-            layout.click()
             Thread.sleep(100)
+            layout.click()
+            slideLayoutMenuButton.click()
+            size--
         }
     }
 
