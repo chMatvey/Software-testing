@@ -11,11 +11,11 @@ import ru.chudakov.page.*
 import java.lang.Exception
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "c:\\chromedriver_win32\\chromedriver.exe")
+    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
     val driver = ChromeDriver()
     driver.manage().window().maximize()
 
-    val wait = WebDriverWait(driver, 10 )
+    val wait = WebDriverWait(driver, 10)
 
     val slidesPage = SlidesPage(driver, wait)
     val signInPage = SignInPage(driver, wait)
@@ -25,9 +25,11 @@ fun main() {
 
     //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage, createPresentationPage))
-    ////System.out.println(createSlidesAndChangeBackground(presentationPage))
-    ////System.out.println(changeLayoutAndTheme(presentationPage))
-    System.out.println()
+    //System.out.println(createSlidesAndChangeBackgroundTest(presentationPage))
+    //System.out.println(changeLayoutAndThemeTest(presentationPage))
+    //System.out.println(zoomAndCommentTest(presentationPage))
+    System.out.println(figuresTest(presentationPage))
+
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -78,7 +80,7 @@ fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePres
     return "AuthorizationTest passed successfully"
 }
 
-fun createSlidesAndChangeBackground(presentationPage: PresentationPage): String {
+fun createSlidesAndChangeBackgroundTest(presentationPage: PresentationPage): String {
     presentationPage.run {
         slidesMenu.createNewSlide()
         slidesMenu.changeBackground()
@@ -87,15 +89,32 @@ fun createSlidesAndChangeBackground(presentationPage: PresentationPage): String 
     return "CreateSlidesAndChangeThemesTest passed successfully"
 }
 
-fun changeLayoutAndTheme(presentationPage: PresentationPage): String {
+fun changeLayoutAndThemeTest(presentationPage: PresentationPage): String {
     presentationPage.run {
         slidesMenu.changeLayout()
+        slidesMenu.changeThemes()
     }
 
-    return "ChangeLayoutAndTheme passed successfully"
+    return "ChangeLayoutAndThemeTest passed successfully"
 }
 
-fun<T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
+fun zoomAndCommentTest(presentationPage: PresentationPage): String {
+    presentationPage.run {
+        slidesMenu.zoomButtonsClick()
+        slidesMenu.insertCommentButtonClick()
+    }
+    return "ZoomAndCommentTest passed successfully"
+}
+
+fun figuresTest(presentationPage: PresentationPage): String {
+    presentationPage.slidesMenu.run {
+        shapeButtonClick()
+        lineMenuButtonClick()
+    }
+    return "FiguresTest passed successfully"
+}
+
+fun <T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
     val result = mutableListOf<T>()
     indexes.forEach { i -> result.add(this[i]) }
     return result

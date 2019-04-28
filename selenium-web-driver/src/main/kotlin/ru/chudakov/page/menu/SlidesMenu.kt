@@ -95,22 +95,25 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         green.click()
         dropdown.click()
         wait.until { reset.isDisplayed }
-
         reset.click()
 
         selectImage.click()
         wait.until { driver.findElement(By.xpath("/html/body/div[@class='picker modal-dialog picker-dialog']")) }
-        Thread.sleep(2000)
-        val insertUrl = driver.findElement(By.xpath("/html/body/div/div/div[4]/div[2]/div/div[1]/div[@class='Nf-ll-Zb-Df-Yb-uj']/div[1]/div[3]"))
+
+        Thread.sleep(1000)
+        driver.switchTo().frame(driver.findElement(By.xpath("//div[@class='picker modal-dialog picker-dialog']/div[2]/iframe")))
+
+        val insertUrl = driver.findElement(By.xpath("//*[@id=\":7\"]"))
         wait.until { insertUrl.isDisplayed }
         insertUrl.click()
-        Thread.sleep(4000)
         val input = driver.findElement(By.xpath("//*[@id=\":v\"]"))
         wait.until { input.isDisplayed }
-        input.sendKeys("https://images.wallpaperscraft.ru/image/gepard_lezhat_dikaya_koshka_pyatnistyy_1182_1920x1080.jpg")
+        input.sendKeys("https://avatars.mds.yandex.net/get-pdb/770122/25849f56-e571-489c-bbf3-739e63ac5a5a/s1200")
         val button = driver.findElement(By.xpath("//*[@id=\"picker:ap:2\"]"))
         wait.until { button.isDisplayed }
         button.click()
+
+        driver.switchTo().defaultContent();
 
         val toAll = driver.findElement(By.xpath("/html/body/div[@class='modal-dialog']/div[3]/button[1]"))
         toAll.click()
@@ -120,7 +123,6 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
     fun changeLayout() {
         slideLayoutMenuButton.click()
-        Thread.sleep(100)
         val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]"))
         wait.until { dropdown.isDisplayed }
 
@@ -130,7 +132,6 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         while (size != 0) {
             val layout = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]/div/table/tbody/tr/td"))[size - 1]
             wait.until { dropdown.isDisplayed }
-            Thread.sleep(100)
             layout.click()
             slideLayoutMenuButton.click()
             size--
@@ -138,14 +139,18 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
     }
 
     fun changeThemes() {
+        slideThemeButton.click()
+        val menu = driver.findElement(By.xpath("/html/body/div[@class='punch-theme-sidebar docs-material']"))
+        wait.until { menu.isDisplayed }
 
-    }
+        val themes = driver.findElements(By.xpath("/html/body/div[@class='punch-theme-sidebar docs-material']/div[2]/div/div[3]/div"))
+        var size = themes.size
 
-    fun printButtonClick() {
-        printButton.click()
-        Thread.sleep(3000)
-        val action = Actions(driver)
-        val cancelButton = driver.findElement(By.xpath("//*[@id=\"button-strip\"]/paper-button[2]")).click()
+        themes.forEach {
+            it.click()
+            Thread.sleep(500)
+        }
+        themes[0].click()
     }
 
     fun zoomButtonsClick() {
@@ -158,10 +163,65 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         actions.contextClick(workSpace).perform()
 
         zoomButtonDropdown.click()
+        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]"))
+        wait.until { dropdown.isDisplayed }
+        val stdSize = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]/div[1]"))
+        stdSize.click()
+    }
 
-        val byDropdown = By.xpath("")
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material'][2]")))
-        driver.findElement(By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material'][2]/div[1]")).click()
+    fun insertCommentButtonClick() {
+        insertCommentButton.click()
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]")))
+        driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]/div/div[2]/textarea"))
+                .sendKeys("Comment")
+        driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]/div[1]/div[2]/div[7]/div[1]"))
+                .click()
+
+        val decideComment = driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div/div/div[1]/div/div/div[1]/div[3]/div[1]"))
+        wait.until { decideComment.isDisplayed }
+        decideComment.click()
+    }
+
+    fun shapeButtonClick() {
+        shapeButton.click()
+        val figures = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div"))
+        wait.until { figures.first().isDisplayed }
+
+        var index = 2
+        figures.forEach {
+            it.click()
+            val elements = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][$index]/div[1]/table/tbody/tr/td"))
+            elements.forEach { element ->
+                wait.until { element.isDisplayed }
+                element.click()
+                workSpace.click()
+                shapeButton.click()
+                wait.until { figures.first().isDisplayed }
+                it.click()
+            }
+            index++
+        }
+    }
+
+    fun lineMenuButtonClick() {
+        lineMenuButton.click()
+        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][3]"))
+        wait.until { dropdown.isDisplayed }
+        val lines = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][3]/div"))
+
+        lines.forEach {
+            wait.until { lines.first().isDisplayed }
+            it.click()
+            workSpace.click()
+            lineMenuButton.click()
+        }
+    }
+
+    fun printButtonClick() {
+        printButton.click()
+        Thread.sleep(3000)
+        val action = Actions(driver)
+        val cancelButton = driver.findElement(By.xpath("//*[@id=\"button-strip\"]/paper-button[2]")).click()
     }
 
     fun textBoxButtonClick() {
@@ -198,15 +258,6 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[44]")))
         insertCommentButton.click()
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[48]")))
-    }
-
-    fun insertCommentButtonClick() {
-        insertCommentButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]")))
-        driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]/div/div[2]/textarea"))
-                .sendKeys("Comment")
-        driver.findElement(By.xpath("//*[@id=\"workspace\"]/div[2]/div/div[1]/div[1]/div[2]/div[7]/div[1]"))
-                .click()
     }
 
     fun slideButtonsClick() {

@@ -36,13 +36,9 @@ class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, 
 
     fun redirectToSignUpPage(signUpPageUrl: String) {
         signUpButton.click()
-        wait
-                .withMessage("signUpButton does not work")
-                .until { createAccountForYourselfButton.isDisplayed }
+        wait.withMessage("signUpButton does not work").until { createAccountForYourselfButton.isDisplayed }
         createAccountForYourselfButton.click()
-        wait
-                .withMessage("Redirect to signUp page does not work")
-                .until { checkUrl(signUpPageUrl) }
+        wait.withMessage("Redirect to signUp page does not work").until { checkUrl(signUpPageUrl) }
     }
 
     fun inputRightLogin() {

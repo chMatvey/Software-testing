@@ -13,8 +13,6 @@ class SlidesPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, 
 
     fun redirectToSignInPage(signInPageUrl: String) {
         openPresentationButton.click()
-        wait
-                .withMessage("Redirect to signIn page does not work")
-                .until { it.currentUrl.startsWith(signInPageUrl) }
+        wait.withMessage("Redirect to signIn page does not work").until { it.currentUrl.startsWith(signInPageUrl) }
     }
 }
