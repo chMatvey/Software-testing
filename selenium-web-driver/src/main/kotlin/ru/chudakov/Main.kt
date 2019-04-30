@@ -28,8 +28,8 @@ fun main() {
     //System.out.println(createSlidesAndChangeBackgroundTest(presentationPage))
     //System.out.println(changeLayoutAndThemeTest(presentationPage))
     //System.out.println(zoomAndCommentTest(presentationPage))
-    System.out.println(figuresTest(presentationPage))
-
+    //System.out.println(figuresTest(presentationPage))
+    System.out.println(textAreaTest(presentationPage))
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -112,6 +112,20 @@ fun figuresTest(presentationPage: PresentationPage): String {
         lineMenuButtonClick()
     }
     return "FiguresTest passed successfully"
+}
+
+fun textAreaTest(presentationPage: PresentationPage): String {
+    presentationPage.slidesMenu.createNewSlide()
+
+    presentationPage.textAreaMenu.run {
+        inputText()
+        //fillColorMenuButtonClick()
+        //lineColorMenuButtonClick()
+        //lineWidthMenuButtonClick()
+        //lineDashingMenuButtonClick()
+    }
+
+    return "TextAreaTest passed successfully"
 }
 
 fun <T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {

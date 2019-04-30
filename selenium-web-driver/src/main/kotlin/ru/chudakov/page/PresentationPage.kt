@@ -10,11 +10,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.getElementsByIndexes
 import ru.chudakov.page.menu.SlidesMenu
+import ru.chudakov.page.menu.TextAreaMenu
 
 class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://docs.google.com/presentation/d";
 
     val slidesMenu = SlidesMenu(driver, wait)
+
+    val textAreaMenu = TextAreaMenu(driver, wait)
 
     @FindBy(xpath = "//*[@id=\"docs-menubar\"]")
     lateinit var docsMenu: WebElement
