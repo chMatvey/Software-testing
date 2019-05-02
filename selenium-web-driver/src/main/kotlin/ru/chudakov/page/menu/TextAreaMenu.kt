@@ -51,6 +51,27 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
     @FindBy(xpath = "//*[@id=\"alignButton\"]")
     lateinit var alignButton: WebElement
 
+    @FindBy(xpath = "//*[@id=\"lineSpacingMenuButton\"]")
+    lateinit var lineSpacingMenuButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"numberedListPresetMenuButton\"]")
+    lateinit var numberedListPresetMenuButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"bulletedListPresetMenuButton\"]")
+    lateinit var bulletListPresetMenuButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"outdentButton\"]")
+    lateinit var outDentButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"indentButton\"]")
+    lateinit var indentButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"formatOptionsButton\"]")
+    lateinit var formatOptionsButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"moreButton\"]")
+    lateinit var moreButton: WebElement
+
     fun inputText() {
         workSpace.click()
 
@@ -66,6 +87,9 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
     }
 
     fun fillColorMenuButtonClick() {
+        workSpace.click()
+        wait.until { formatOptionsButton.isDisplayed }
+
         val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material docs-colormenuitems goog-menu-noaccel sketchy-gradientmenuitems']/div[4]/table/tbody/tr/td"
         clickMenuButtons(fillColorMenuButton, elementsXpath)
     }
@@ -148,6 +172,58 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
         clickMenuButtons(alignButton, elementsXpath)
     }
 
+    fun changeLineSpacing() {
+        selectText()
+
+        lineSpacingMenuButton.click()
+        lineSpacingMenuButton.click()
+
+//        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][4]/div"
+//        val elements = driver.findElements(By.xpath(elementsXpath)).filter { it.getAttribute("class") != "goog-menuseparator" }
+//
+//        clickMenuButtons(lineSpacingMenuButton, listOf(elements[0], elements[1]))
+    }
+
+    fun numberedList() {
+        selectText()
+
+        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical'][2]/div/table/tbody/tr/td"
+        clickMenuButtons(numberedListPresetMenuButton, elementsXpath)
+    }
+
+    fun bulletListPresetMenuButtonClick() {
+        selectText()
+
+        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical']/div/table/tbody/tr/td"
+//        clickMenuButtons(bulletListPresetMenuButton, elementsXpath)
+    }
+
+    fun changeIndent() {
+        outDentButton.click()
+        indentButton.click()
+    }
+
+    fun formatOptionsButtonClick() {
+        if (!formatOptionsButton.isDisplayed) {
+            moreButton.click()
+            wait.until { formatOptionsButton.isDisplayed }
+        }
+
+        formatOptionsButton.click()
+        val sizeAndPosition = driver.findElement(By.xpath("/html/body/div[@class='docs-tiled-sidebar docs-material']/div[2]/div/div[2]/div[1]"))
+        wait.until { sizeAndPosition.isDisplayed }
+        sizeAndPosition.click()
+
+        val weight = driver.findElement(By.xpath("/html/body/div[@class='docs-tiled-sidebar docs-material']/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[1]/div/div[2]/input"))
+        val height = driver.findElement(By.xpath("/html/body/div[@class='docs-tiled-sidebar docs-material']/div[2]/div/div[2]/div[2]/div/div[1]/div[2]/div[2]/div/div[2]/input"))
+        val corner = driver.findElement(By.xpath("/html/body/div[@class='docs-tiled-sidebar docs-material']/div[2]/div/div[2]/div[2]/div/div[3]/div[2]/div[1]/div/div[2]/input"))
+
+        wait.until { weight.isDisplayed }
+        weight.sendKeys("23")
+        height.sendKeys("9.5")
+        corner.sendKeys("5")
+    }
+
     private fun selectText() {
         workSpace.click()
         workSpace.click()
@@ -161,6 +237,20 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
         menuButton.click()
 
         val elements = driver.findElements(By.xpath(elementsXpath))
+        wait.until { elements.first().isDisplayed }
+        elements.forEach {
+            it.click()
+            menuButton.click()
+            wait.until { elements.first().isDisplayed }
+        }
+    }
+
+    private fun clickMenuButtons(menuButton: WebElement, elements: List<WebElement>) {
+        workSpace.click()
+        wait.until { menuButton.isDisplayed }
+
+        menuButton.click()
+
         wait.until { elements.first().isDisplayed }
         elements.forEach {
             it.click()

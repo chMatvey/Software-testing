@@ -25,11 +25,14 @@ fun main() {
 
     //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
     System.out.println(authorizationTest(signInPage, createPresentationPage))
-    //System.out.println(createSlidesAndChangeBackgroundTest(presentationPage))
-    //System.out.println(changeLayoutAndThemeTest(presentationPage))
-    //System.out.println(zoomAndCommentTest(presentationPage))
-    //System.out.println(figuresTest(presentationPage))
-    System.out.println(textAreaTest(presentationPage))
+//    System.out.println(createSlidesAndChangeBackgroundTest(presentationPage))
+//    System.out.println(changeLayoutAndThemeTest(presentationPage))
+//    System.out.println(zoomAndCommentTest(presentationPage))
+//    System.out.println(figuresTest(presentationPage))
+//    System.out.println(textAreaTest(presentationPage))
+    System.out.println(docsMenuTest(presentationPage))
+    System.out.println(fileMenuTest(presentationPage))
+
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -99,6 +102,8 @@ fun changeLayoutAndThemeTest(presentationPage: PresentationPage): String {
 }
 
 fun zoomAndCommentTest(presentationPage: PresentationPage): String {
+    Thread.sleep(1000)
+
     presentationPage.run {
         slidesMenu.zoomButtonsClick()
         slidesMenu.insertCommentButtonClick()
@@ -115,6 +120,8 @@ fun figuresTest(presentationPage: PresentationPage): String {
 }
 
 fun textAreaTest(presentationPage: PresentationPage): String {
+    presentationPage.reload()
+
     presentationPage.slidesMenu.createNewSlide()
 
     presentationPage.textAreaMenu.run {
@@ -129,9 +136,41 @@ fun textAreaTest(presentationPage: PresentationPage): String {
         changeTextColor()
         changeBackgroundTextColor()
         insetLink()
+        alignText()
+        changeLineSpacing()
+        numberedList()
+        bulletListPresetMenuButtonClick()
+        changeIndent()
+        formatOptionsButtonClick()
     }
 
     return "TextAreaTest passed successfully"
+}
+
+fun docsMenuTest(presentationPage: PresentationPage): String {
+    //presentationPage.reload()
+    presentationPage.clickDocsMenuButtons()
+
+    return "DocsMenuTest passed successfully"
+}
+
+fun fileMenuTest(presentationPage: PresentationPage): String {
+
+    presentationPage.docsFileMenu.run {
+        clickDropDowns()
+        accessButtonClick()
+        openButtonClick()
+        importSlides()
+        createCopy()
+        sendMessage()
+        rename()
+        transfer()
+        delete()
+        publish()
+        getInformation()
+        settings()
+    }
+    return "FileMenuTest passed successfully"
 }
 
 fun <T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {

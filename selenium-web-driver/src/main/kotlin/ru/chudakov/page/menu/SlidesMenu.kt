@@ -13,9 +13,6 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
     @FindBy(xpath = "//*[@id=\"newSlideButton\"]")
     lateinit var newSlideButton: WebElement
 
-    @FindBy(xpath = "//*[@id=\"newSlideMenuButton\"]")
-    lateinit var newSlideMenuButton: WebElement
-
     @FindBy(xpath = "//*[@id=\"undoButton\"]")
     lateinit var undoButton: WebElement
 
@@ -24,9 +21,6 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
     @FindBy(xpath = "//*[@id=\"printButton\"]")
     lateinit var printButton: WebElement
-
-    @FindBy(xpath = "//*[@id=\"paintFormatButton\"]")
-    lateinit var paintFormatButton: WebElement
 
     @FindBy(xpath = "//*[@id=\"zoomButton\"]")
     lateinit var zoomButton: WebElement
@@ -84,7 +78,7 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
         val dropdown = driver.findElement(By.xpath("//*[@id=\"punch-id-bg-color-button-container\"]/div"))
         val reset = driver.findElement(By.xpath("//*[@id=\"punch-id-bg-reset-button-container\"]/div"))
-        val ready = driver.findElement(By.xpath("/html/body/div[35]/div[3]/button[2]"))
+        val ready = driver.findElement(By.xpath("/html/body/div[@class='modal-dialog']/div[3]/button[2]"))
         val selectImage = driver.findElement(By.xpath("//*[@id=\"punch-id-bg-image-container\"]/div"))
 
         dropdown.click()
@@ -109,6 +103,7 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         val input = driver.findElement(By.xpath("//*[@id=\":v\"]"))
         wait.until { input.isDisplayed }
         input.sendKeys("https://avatars.mds.yandex.net/get-pdb/770122/25849f56-e571-489c-bbf3-739e63ac5a5a/s1200")
+        Thread.sleep(500)
         val button = driver.findElement(By.xpath("//*[@id=\"picker:ap:2\"]"))
         wait.until { button.isDisplayed }
         button.click()
@@ -116,6 +111,7 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         driver.switchTo().defaultContent();
 
         val toAll = driver.findElement(By.xpath("/html/body/div[@class='modal-dialog']/div[3]/button[1]"))
+        wait.until { toAll.isDisplayed }
         toAll.click()
 
         ready.click()
@@ -123,14 +119,14 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
     fun changeLayout() {
         slideLayoutMenuButton.click()
-        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]"))
+        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]"))
         wait.until { dropdown.isDisplayed }
 
-        val layouts = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]/div/table/tbody/tr/td"))
+        val layouts = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]/div/table/tbody/tr/td"))
         var size = layouts.size
 
         while (size != 0) {
-            val layout = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][2]/div/table/tbody/tr/td"))[size - 1]
+            val layout = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]/div/table/tbody/tr/td"))[size - 1]
             wait.until { dropdown.isDisplayed }
             layout.click()
             slideLayoutMenuButton.click()
@@ -148,7 +144,7 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
         themes.forEach {
             it.click()
-            Thread.sleep(500)
+            Thread.sleep(750)
         }
         themes[0].click()
     }
@@ -163,9 +159,9 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         actions.contextClick(workSpace).perform()
 
         zoomButtonDropdown.click()
-        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]"))
+        val dropdown = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][4]"))
         wait.until { dropdown.isDisplayed }
-        val stdSize = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][3]/div[1]"))
+        val stdSize = driver.findElement(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][4]/div[1]"))
         stdSize.click()
     }
 
@@ -187,7 +183,7 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
         val figures = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div"))
         wait.until { figures.first().isDisplayed }
 
-        var index = 2
+        var index = 5
         figures.forEach {
             it.click()
             val elements = driver.findElements(By.xpath("/html/body/div[@class='goog-menu goog-menu-vertical docs-material'][$index]/div[1]/table/tbody/tr/td"))
