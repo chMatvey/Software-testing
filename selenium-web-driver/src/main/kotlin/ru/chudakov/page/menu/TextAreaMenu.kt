@@ -3,9 +3,9 @@ package ru.chudakov.page.menu
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
-import javax.xml.xpath.XPath
 
 class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, wait)  {
 
@@ -27,39 +27,131 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
     @FindBy(xpath = "//*[@id=\"docs-font-family\"]")
     lateinit var docsFontFamilyButton: WebElement
 
+    @FindBy(xpath = "//*[@id=\"fontSizeSelect\"]")
+    lateinit var fontSizeSelect: WebElement
+
+    @FindBy(xpath = "//*[@id=\"boldButton\"]")
+    lateinit var boldButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"italicButton\"]")
+    lateinit var italicButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"underlineButton\"]")
+    lateinit var underlineButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"textColorButton\"]")
+    lateinit var textColorButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"bgColorButton\"]")
+    lateinit var bgColorButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"insertLinkButton\"]")
+    lateinit var insertLinkButton: WebElement
+
+    @FindBy(xpath = "//*[@id=\"alignButton\"]")
+    lateinit var alignButton: WebElement
+
     fun inputText() {
-        val textArea = driver.findElement(By.xpath("//div[@id=\"pages\"]/*[local-name()='svg'][2]/*[local-name()='g']/*[local-name()='g']/*[local-name()='g'][3]"))
-        textArea.sendKeys("qwerty")
+        workSpace.click()
+
+        //val textArea = driver.findElement(By.xpath("//div[@id=\"pages\"]/*[local-name()='svg'][2]/*[local-name()='g']/*[local-name()='g']/*[local-name()='g'][3]/*[local-name()='g']//*[local-name()='g'][5]/*[local-name()='g']/*[local-name()='g'][2]/*[local-name()='path'][1]"))
+        //textArea.sendKeys("qwerty")
+
+        val action = Actions(driver)
+        var key: String = ""
+        for (i in 1..3) {
+            key = key.plus("qwerty ")
+        }
+        action.sendKeys(key).perform()
     }
 
     fun fillColorMenuButtonClick() {
         val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material docs-colormenuitems goog-menu-noaccel sketchy-gradientmenuitems']/div[4]/table/tbody/tr/td"
-
         clickMenuButtons(fillColorMenuButton, elementsXpath)
     }
 
     fun lineColorMenuButtonClick() {
         val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material docs-colormenuitems goog-menu-noaccel']/div[3]/table/tbody/tr/td"
-
         clickMenuButtons(lineColorMenuButton, elementsXpath)
     }
 
     fun lineWidthMenuButtonClick() {
         val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div"
-
         clickMenuButtons(lineWidthMenuButton, elementsXpath)
     }
 
     fun lineDashingMenuButtonClick() {
-        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div"
-
+        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][3]/div"
         clickMenuButtons(lineDashingMenuButton, elementsXpath)
     }
 
     fun docsFontFamilyButtonClick() {
-        workSpace.click()
+        selectText()
 
-        val elementsXpath = ""
+        val elementsXpath = "/html/body//div[@class='docs-fontmenu-fonts']/div"
+
+        docsFontFamilyButton.click()
+        val firstFont = driver.findElement(By.xpath(elementsXpath))
+        wait.until { firstFont.isDisplayed }
+        firstFont.click()
+    }
+
+    fun changeFontSize() {
+        selectText()
+
+        val elementsXpath = "//div[@class='goog-menu goog-menu-vertical goog-menu-noicon goog-menu-noaccel']/div"
+
+        clickMenuButtons(fontSizeSelect, elementsXpath)
+    }
+
+    fun changeText() {
+        selectText()
+
+        boldButton.click()
+        italicButton.click()
+        underlineButton.click()
+    }
+
+    fun changeTextColor() {
+        selectText()
+
+        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical docs-material docs-colormenuitems goog-menu-noaccel'][2]/div[2]/table/tbody/tr/td"
+        clickMenuButtons(textColorButton, elementsXpath)
+    }
+
+    fun changeBackgroundTextColor() {
+        selectText()
+
+        val elementsXpath = "html/body/div[@class='goog-menu goog-menu-vertical docs-material docs-colormenuitems goog-menu-noaccel'][3]/div[2]/table/tbody/tr/td"
+        clickMenuButtons(bgColorButton, elementsXpath)
+    }
+
+    fun insetLink() {
+        workSpace.click()
+        wait.until { insertLinkButton.isDisplayed }
+
+//        insertLinkButton.click()
+//        val slideLink = driver.findElement(By.xpath("//div[@class='jfk-bubble docs-calloutbubble-bubble docs-linkbubble-bubble docs-material']/div/div/div[2]/div/div[2]"))
+//        wait.until { slideLink.isDisplayed }
+//        slideLink.click()
+//
+//        val previousSlide = driver.findElement(By.xpath("//div[@class='jfk-bubble docs-calloutbubble-bubble docs-linkbubble-bubble docs-material']/div/div/div[2]/div/div[1]/div[3]/div/div[2]/div/div[2]/div[1]"))
+//        wait.until { previousSlide.isDisplayed }
+//        previousSlide.click()
+    }
+
+    fun alignText() {
+        selectText()
+
+        val elementsXpath = "/html/body/div[@class='goog-menu goog-menu-vertical']/div/table/tbody/tr/td"
+
+        clickMenuButtons(alignButton, elementsXpath)
+    }
+
+    private fun selectText() {
+        workSpace.click()
+        workSpace.click()
+        workSpace.click()
     }
 
     private fun clickMenuButtons(menuButton: WebElement, elementsXpath: String) {

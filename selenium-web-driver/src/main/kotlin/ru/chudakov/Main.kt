@@ -118,11 +118,17 @@ fun textAreaTest(presentationPage: PresentationPage): String {
     presentationPage.slidesMenu.createNewSlide()
 
     presentationPage.textAreaMenu.run {
+        fillColorMenuButtonClick()
+        lineColorMenuButtonClick()
+        lineWidthMenuButtonClick()
+        lineDashingMenuButtonClick()
         inputText()
-        //fillColorMenuButtonClick()
-        //lineColorMenuButtonClick()
-        //lineWidthMenuButtonClick()
-        //lineDashingMenuButtonClick()
+        docsFontFamilyButtonClick()
+        changeFontSize()
+        changeText()
+        changeTextColor()
+        changeBackgroundTextColor()
+        insetLink()
     }
 
     return "TextAreaTest passed successfully"
