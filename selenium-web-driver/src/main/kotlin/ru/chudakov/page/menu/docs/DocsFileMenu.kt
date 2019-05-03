@@ -1,4 +1,4 @@
-package ru.chudakov.page.menu
+package ru.chudakov.page.menu.docs
 
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
@@ -11,22 +11,10 @@ class DocsFileMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(dr
     @FindBy(xpath = "//*[@id=\"docs-file-menu\"]")
     override lateinit var docsMenuButton: WebElement
 
-    //override val dropdownXpath = "/html/body/div[35]"
-
     @FindBy(xpath = "/html/body/div[35]")
     override lateinit var dropdown: WebElement
 
-    fun clickDropDowns() {
-        docsMenuButton.click()
-        wait.until { dropdown.isDisplayed }
-
-        val xpathArray = arrayOf("div[5]", "div[11]", "div[14]", "div[25]")
-
-        xpathArray.forEach {
-            val button = dropdown.findElement(By.xpath(it))
-            button.click()
-        }
-    }
+    override val xpathListOfDropdown = listOf("div[5]", "div[11]", "div[14]", "div[25]")
 
     fun accessButtonClick() {
         wait.until { dropdown.isDisplayed }
@@ -38,7 +26,7 @@ class DocsFileMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(dr
         wait.until { driver.findElements(By.xpath(xpath)).isNotEmpty() }
 
         val presentationNameInput = driver.findElement(By.xpath(xpath))
-        presentationNameInput.sendKeys("presentation")
+        presentationNameInput.sendKeys("name")
 
         val saveButton = driver.findElement(By.xpath("/html/body/div[@class='modal-dialog docs-rename-dialog docs-dialog']/div[3]/button[2]"))
         saveButton.click()
@@ -94,7 +82,7 @@ class DocsFileMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(dr
 
         val inputName = driver.findElement(By.xpath("//*[@id=\"docs-title-widget\"]/input"))
         wait.until { inputName.isDisplayed }
-        inputName.sendKeys("presentation1")
+        inputName.sendKeys("name1")
 
         action.sendKeys(Keys.ENTER).build().perform()
     }

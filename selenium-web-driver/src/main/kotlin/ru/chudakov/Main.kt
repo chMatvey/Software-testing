@@ -31,8 +31,17 @@ fun main() {
 //    System.out.println(figuresTest(presentationPage))
 //    System.out.println(textAreaTest(presentationPage))
     System.out.println(docsMenuTest(presentationPage))
-    System.out.println(fileMenuTest(presentationPage))
+    //System.out.println(docsFileMenuTest(presentationPage))
+    //System.out.println(docsEditMenuTest(presentationPage))
+    //System.out.println(docsViewMenuTest(presentationPage))
+    System.out.println(docsInsertMenuTest(presentationPage))
 
+}
+
+fun <T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
+    val result = mutableListOf<T>()
+    indexes.forEach { i -> result.add(this[i]) }
+    return result
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -154,7 +163,7 @@ fun docsMenuTest(presentationPage: PresentationPage): String {
     return "DocsMenuTest passed successfully"
 }
 
-fun fileMenuTest(presentationPage: PresentationPage): String {
+fun docsFileMenuTest(presentationPage: PresentationPage): String {
 
     presentationPage.docsFileMenu.run {
         clickDropDowns()
@@ -173,8 +182,47 @@ fun fileMenuTest(presentationPage: PresentationPage): String {
     return "FileMenuTest passed successfully"
 }
 
-fun <T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
-    val result = mutableListOf<T>()
-    indexes.forEach { i -> result.add(this[i]) }
-    return result
+fun docsEditMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.slidesMenu.createNewSlide()
+    presentationPage.textAreaMenu.inputText("text", 3)
+
+    presentationPage.docsEditMenu.run {
+        selectAll()
+        creatCopy()
+        cancel()
+        copy()
+        insert()
+        repeat()
+        findAndReplace()
+    }
+
+    return "DocsEditMenuTest passed successfully"
+}
+
+fun docsViewMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.docsViewMenu.run {
+        watch()
+        animation()
+        changeView()
+        clickDropDowns()
+    }
+
+    return "DocsViewMenuTest passed successfully"
+}
+
+fun docsInsertMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.slidesMenu.createNewSlide()
+
+    presentationPage.docsInsertMenu.run {
+        insertTextArea()
+        insertTable()
+        insertVideo()
+        insertArt()
+        insertNewSlide()
+        insertSlideNumbers()
+        insertDiagram()
+        //clickDropDowns()
+    }
+
+    return "DocsInsertMenuTest passed successfully"
 }

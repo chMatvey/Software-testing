@@ -72,7 +72,7 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
     @FindBy(xpath = "//*[@id=\"moreButton\"]")
     lateinit var moreButton: WebElement
 
-    fun inputText() {
+    fun inputText(text: String = "qwerty ", count: Int = 3) {
         workSpace.click()
 
         //val textArea = driver.findElement(By.xpath("//div[@id=\"pages\"]/*[local-name()='svg'][2]/*[local-name()='g']/*[local-name()='g']/*[local-name()='g'][3]/*[local-name()='g']//*[local-name()='g'][5]/*[local-name()='g']/*[local-name()='g'][2]/*[local-name()='path'][1]"))
@@ -80,8 +80,8 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
 
         val action = Actions(driver)
         var key: String = ""
-        for (i in 1..3) {
-            key = key.plus("qwerty ")
+        for (i in 1..count) {
+            key = key.plus(text)
         }
         action.sendKeys(key).perform()
     }
