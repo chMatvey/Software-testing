@@ -56,7 +56,7 @@ class DocsInsertMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(
     fun insertDiagram() {
         clickDropdownButton("div[6]")
 
-        val xpath = "/html/body/div[50]/div[4]"
+        val xpath = "/html/body/div[45]/div[4]"
         //wait.until { driver.findElements(By.xpath(xpath)).isNotEmpty() }
         val diagram = driver.findElement(By.xpath(xpath))
         wait.until { diagram.isDisplayed }

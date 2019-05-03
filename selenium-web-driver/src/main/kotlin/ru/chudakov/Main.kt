@@ -34,7 +34,9 @@ fun main() {
     //System.out.println(docsFileMenuTest(presentationPage))
     //System.out.println(docsEditMenuTest(presentationPage))
     //System.out.println(docsViewMenuTest(presentationPage))
-    System.out.println(docsInsertMenuTest(presentationPage))
+    //System.out.println(docsInsertMenuTest(presentationPage))
+    //System.out.println(docsFormatMenuTest(presentationPage))
+    System.out.println(docsSlideMenuTest(presentationPage))
 
 }
 
@@ -214,6 +216,7 @@ fun docsInsertMenuTest(presentationPage: PresentationPage): String {
     presentationPage.slidesMenu.createNewSlide()
 
     presentationPage.docsInsertMenu.run {
+        clickDropDowns()
         insertTextArea()
         insertTable()
         insertVideo()
@@ -221,8 +224,31 @@ fun docsInsertMenuTest(presentationPage: PresentationPage): String {
         insertNewSlide()
         insertSlideNumbers()
         insertDiagram()
-        //clickDropDowns()
     }
 
     return "DocsInsertMenuTest passed successfully"
+}
+
+fun docsFormatMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.slidesMenu.createNewSlide()
+    presentationPage.textAreaMenu.inputText()
+    presentationPage.docsEditMenu.selectAll()
+
+    presentationPage.docsFormatMenu.run {
+        clickDropDowns()
+        formatParams()
+    }
+
+    return "DocsFormatMenuTest passed successfully"
+}
+
+fun docsSlideMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.docsSlidesMenu.run {
+        createNewSlide()
+        duplicateSlide()
+        deleteSlide()
+        missSlide()
+    }
+
+    return "DocsSlideMenuTest passed successfully"
 }

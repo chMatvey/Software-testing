@@ -4,12 +4,9 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.WebDriverWait
-import ru.chudakov.page.menu.docs.DocsFileMenu
 import ru.chudakov.page.menu.SlidesMenu
 import ru.chudakov.page.menu.TextAreaMenu
-import ru.chudakov.page.menu.docs.DocsEditMenu
-import ru.chudakov.page.menu.docs.DocsInsertMenu
-import ru.chudakov.page.menu.docs.DocsViewMenu
+import ru.chudakov.page.menu.docs.*
 
 class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://docs.google.com/presentation/d";
@@ -25,6 +22,10 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
     val docsViewMenu = DocsViewMenu(driver, wait)
 
     val docsInsertMenu = DocsInsertMenu(driver, wait)
+
+    val docsFormatMenu = DocsFormatMenu(driver, wait)
+
+    val docsSlidesMenu = DocsSlideMenu(driver, wait)
 
     fun clickDocsMenuButtons() {
         val docsButtons = getDocsMenuButtons()
