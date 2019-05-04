@@ -25,7 +25,7 @@ class DocsInsertMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(
     }
 
     fun insertVideo() {
-        clickDropdownButton("div[3]", "/html/body/div[@class='picker modal-dialog picker-dialog']")
+        clickDropdownButton("div[3]", "/html/body/div[@class='picker modal-dialog picker-dialog'][3]")
     }
 
     fun insertTable() {
@@ -56,7 +56,7 @@ class DocsInsertMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(
     fun insertDiagram() {
         clickDropdownButton("div[6]")
 
-        val xpath = "/html/body/div[45]/div[4]"
+        val xpath = "/html/body/div[66]/div[4]"
         //wait.until { driver.findElements(By.xpath(xpath)).isNotEmpty() }
         val diagram = driver.findElement(By.xpath(xpath))
         wait.until { diagram.isDisplayed }

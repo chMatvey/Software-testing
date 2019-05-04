@@ -17,7 +17,7 @@ class DocsFileMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(dr
     override val xpathListOfDropdown = listOf("div[5]", "div[11]", "div[14]", "div[25]")
 
     fun accessButtonClick() {
-        wait.until { dropdown.isDisplayed }
+        docsMenuButtonClick()
 
         val accessButton = dropdown.findElement(By.xpath("div[3]"))
         accessButton.click()

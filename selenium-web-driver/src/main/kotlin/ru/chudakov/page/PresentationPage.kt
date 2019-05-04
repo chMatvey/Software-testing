@@ -27,6 +27,14 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
 
     val docsSlidesMenu = DocsSlideMenu(driver, wait)
 
+    val docsArrangeMenu = DocsArrangeMenu(driver, wait)
+
+    val docsToolsMenu = DocsToolsMenu(driver, wait)
+
+    val docsExtensionsMenu = DocsExtensionsMenu(driver, wait)
+
+    val docsHelpMenu = DocsHelpMenu(driver, wait)
+
     fun clickDocsMenuButtons() {
         val docsButtons = getDocsMenuButtons()
 

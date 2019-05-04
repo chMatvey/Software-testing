@@ -7,12 +7,18 @@ import org.openqa.selenium.support.ui.WebDriverWait
 import java.net.PasswordAuthentication
 import kotlin.coroutines.coroutineContext
 
+//Объектная модель страницы авторизации
 class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
     override val pageUrl = "https://accounts.google.com/signin/v2/identifier?service=wise&passive=1209600&continue=https%3A%2F%2Fdocs.google.com%2Fpresentation%2F%3Fusp%3Dmkt_slides"
 
+    //Текстовое поле для ввода адреса электронной почты
+    //Метод initElements класса PageFactory, вызываемый в родительском конструкторе
+    //инициализирует поле при первом обращеннии к нему
+    //Аннотация FindBy указывает способ поиска элементанта на веб-странице
     @FindBy(xpath = "//*[@id=\"identifierId\"]")
     lateinit var emailInput: WebElement
 
+    //Текстовое поле для ввода пароля
     @FindBy(css = "#password > div.aCsJod.oJeWuf > div > div.Xb9hP > input")
     lateinit var passwordInput: WebElement
 
@@ -34,11 +40,15 @@ class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, 
     @FindBy(xpath = "//*[@id=\"password\"]/div[2]/div[2]/div")
     lateinit var passwordIsNotRightDiv: WebElement
 
+    //Переадресация на страницу регистрации
     fun redirectToSignUpPage(signUpPageUrl: String) {
         signUpButton.click()
+        //Метод until ожидает выполнения переданного условия за время переданное в конструкторе класса WebDriverWait
+        //Метод withMessage, в случае если веб-драйверу не удастся найти веб-элемент
+        //за отведенное время, добавит в выброшенный Exception переданное сообщение
         wait.withMessage("signUpButton does not work").until { createAccountForYourselfButton.isDisplayed }
         createAccountForYourselfButton.click()
-        wait.withMessage("Redirect to signUp page does not work").until { checkUrl(signUpPageUrl) }
+        wait.withMessage("Redirect to signUp page does not work").until { driver.currentUrl.startsWith(signUpPageUrl) }
     }
 
     fun inputRightLogin() {

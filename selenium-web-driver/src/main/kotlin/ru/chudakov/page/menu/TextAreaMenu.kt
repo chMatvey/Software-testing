@@ -72,6 +72,21 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
     @FindBy(xpath = "//*[@id=\"moreButton\"]")
     lateinit var moreButton: WebElement
 
+    private fun clickMenuButtons(menuButton: WebElement, elementsXpath: String) {
+        workSpace.click()
+        wait.until { menuButton.isDisplayed }
+
+        menuButton.click()
+
+        val elements = driver.findElements(By.xpath(elementsXpath))
+        wait.until { elements.first().isDisplayed }
+        elements.forEach {
+            it.click()
+            menuButton.click()
+            wait.until { elements.first().isDisplayed }
+        }
+    }
+
     fun inputText(text: String = "qwerty ", count: Int = 3) {
         workSpace.click()
 
@@ -228,21 +243,6 @@ class TextAreaMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver
         workSpace.click()
         workSpace.click()
         workSpace.click()
-    }
-
-    private fun clickMenuButtons(menuButton: WebElement, elementsXpath: String) {
-        workSpace.click()
-        wait.until { menuButton.isDisplayed }
-
-        menuButton.click()
-
-        val elements = driver.findElements(By.xpath(elementsXpath))
-        wait.until { elements.first().isDisplayed }
-        elements.forEach {
-            it.click()
-            menuButton.click()
-            wait.until { elements.first().isDisplayed }
-        }
     }
 
     private fun clickMenuButtons(menuButton: WebElement, elements: List<WebElement>) {

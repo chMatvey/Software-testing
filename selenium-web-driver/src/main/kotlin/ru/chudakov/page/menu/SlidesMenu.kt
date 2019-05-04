@@ -1,13 +1,11 @@
 package ru.chudakov.page.menu
 
-import org.openqa.selenium.By
-import org.openqa.selenium.Keys
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.*
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import java.lang.Exception
 
 class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, wait) {
     @FindBy(xpath = "//*[@id=\"newSlideButton\"]")
@@ -112,9 +110,17 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
 
         val toAll = driver.findElement(By.xpath("/html/body/div[@class='modal-dialog']/div[3]/button[1]"))
         wait.until { toAll.isDisplayed }
-        toAll.click()
 
-        ready.click()
+        try {
+            toAll.click()
+            ready.click()
+        } catch (e: ElementClickInterceptedException) {
+            val action = Actions(driver)
+            action.sendKeys(Keys.ESCAPE).build().perform()
+            Thread.sleep(500)
+            action.sendKeys(Keys.ESCAPE).build().perform()
+            Thread.sleep(500)
+        }
     }
 
     fun changeLayout() {
@@ -211,65 +217,6 @@ class SlidesMenu(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, 
             workSpace.click()
             lineMenuButton.click()
         }
-    }
-
-    fun printButtonClick() {
-        printButton.click()
-        Thread.sleep(3000)
-        val action = Actions(driver)
-        val cancelButton = driver.findElement(By.xpath("//*[@id=\"button-strip\"]/paper-button[2]")).click()
-    }
-
-    fun textBoxButtonClick() {
-        textBoxButton.click()
-        workSpace.click()
-        Thread.sleep(1000)
-        undoButton.click()
-    }
-
-    fun insertImageMenuButtonClick() {
-        val action = Actions(driver)
-
-        val insertImageMenuDropdownXpath = hashMapOf(
-                "//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div[2]" to "//*[@id=\"yDmH0d\"]//div[@class='xS3Cpf']",
-                "//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div[4]" to "//*[@id=\"yDmH0d\"]//div[@class='ye3Lg']",
-                "//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div[5]" to "//*[@id=\"yDmH0d\"]/div/div[6]//div[@class='r7c0H']",
-                "//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div[6]" to "//div[@class='google-url-picker modal-dialog']",
-                "//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]/div[7]" to "//*[@id=\"yDmH0d\"]//div[@class='iOrYl']"
-        )
-
-        insertImageMenuDropdownXpath.forEach { t, u ->
-            insertImageMenuButton.click()
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='goog-menu goog-menu-vertical docs-material goog-menu-noaccel'][2]")))
-            driver.findElement(By.xpath(t)).click()
-            //wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(u)))
-            Thread.sleep(1000)
-            action.sendKeys(Keys.ESCAPE).build().perform()
-        }
-        action.sendKeys(Keys.ESCAPE).build().perform()
-    }
-
-    fun shapeAndLineButtonsClick() {
-        shapeButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[44]")))
-        insertCommentButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[48]")))
-    }
-
-    fun slideButtonsClick() {
-        slideBackgroundButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='modal-dialog']")))
-        driver.findElement(By.xpath("/html/body/div[@class='modal-dialog']//span[2]")).click()
-
-        slideLayoutMenuButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div/table[@class='goog-palette-table']")))
-        driver.findElement(By.xpath("//div/table[@class='goog-palette-table']/tbody/tr[4]/td[1]")).click()
-
-        slideThemeButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='punch-theme-sidebar docs-material']")))
-
-        slideTransitionButton.click()
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[@class='punch-animation-sidebar docs-material']")))
     }
 
     private fun getSlides(): List<WebElement> {

@@ -11,39 +11,38 @@ import ru.chudakov.page.*
 import java.lang.Exception
 
 fun main() {
-    System.setProperty("webdriver.chrome.driver", "e:\\chromedriver_win32\\chromedriver.exe")
-    val driver = ChromeDriver()
-    driver.manage().window().maximize()
+    val driver = ChromeDriver() //Конструктор класса ChromeDriver запускает ChromeDriver сервер и открывает веб-браузер Chrome
+    driver.manage().window().maximize() //Разворачиваем веб-браузер а полный экран
+    val wait = WebDriverWait(driver, 10) //Создание экземпляра класса WebDriverWait, необходимого для ясвного ожидания отображения веб-эелментов
 
-    val wait = WebDriverWait(driver, 10)
-
+    //Инициализация объктов, представляющих объектные модели веб-страниц
     val slidesPage = SlidesPage(driver, wait)
     val signInPage = SignInPage(driver, wait)
     val signUpPage = SignUpPage(driver, wait)
     val createPresentationPage = CreatePresentationPage(driver, wait)
     val presentationPage = PresentationPage(driver, wait)
 
-    //System.out.println(registrationTest(slidesPage, signInPage, signUpPage))
-    System.out.println(authorizationTest(signInPage, createPresentationPage))
-//    System.out.println(createSlidesAndChangeBackgroundTest(presentationPage))
-//    System.out.println(changeLayoutAndThemeTest(presentationPage))
-//    System.out.println(zoomAndCommentTest(presentationPage))
-//    System.out.println(figuresTest(presentationPage))
-//    System.out.println(textAreaTest(presentationPage))
-    System.out.println(docsMenuTest(presentationPage))
-    //System.out.println(docsFileMenuTest(presentationPage))
-    //System.out.println(docsEditMenuTest(presentationPage))
-    //System.out.println(docsViewMenuTest(presentationPage))
-    //System.out.println(docsInsertMenuTest(presentationPage))
-    //System.out.println(docsFormatMenuTest(presentationPage))
-    System.out.println(docsSlideMenuTest(presentationPage))
+    //Запуск тестовых сценариев
+    println(registrationTest(slidesPage, signInPage, signUpPage))
+    println(authorizationTest(signInPage, createPresentationPage))
+    println(docsMenuTest(presentationPage))
+    println(docsFileMenuTest(presentationPage))
+    println(docsEditMenuTest(presentationPage))
+    println(docsViewMenuTest(presentationPage))
+    println(docsInsertMenuTest(presentationPage))
+    println(docsFormatMenuTest(presentationPage))
+    println(docsSlideMenuTest(presentationPage))
+    println(docsArrangeMenuTest(presentationPage))
+    println(docsToolsMenuTest(presentationPage))
+    println(docsExtensionsMenuTest(presentationPage))
+    println(docsHelpMenuTest(presentationPage))
+    println(createSlidesAndChangeBackgroundTest(presentationPage))
+    println(changeLayoutAndThemeTest(presentationPage))
+    println(zoomAndCommentTest(presentationPage))
+    println(figuresTest(presentationPage))
+    println(textAreaTest(presentationPage))
 
-}
-
-fun <T> List<T>.getElementsByIndexes(indexes: List<Int>): List<T> {
-    val result = mutableListOf<T>()
-    indexes.forEach { i -> result.add(this[i]) }
-    return result
+    driver.quit() //Завершение процесса
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -78,7 +77,9 @@ fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage:
     return "Registration test passed successfully"
 }
 
+//Тестовый сценарий номер 2, Authorization Test
 fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePresentationPage): String {
+    //Вызов функций класса signInPage, имитирующих действия пользователя
     signInPage.run {
         open()
         //inputUnExistLogin()
@@ -95,6 +96,8 @@ fun authorizationTest(signInPage: SignInPage, createPresentationPage: CreatePres
 }
 
 fun createSlidesAndChangeBackgroundTest(presentationPage: PresentationPage): String {
+    presentationPage.reload()
+
     presentationPage.run {
         slidesMenu.createNewSlide()
         slidesMenu.changeBackground()
@@ -104,6 +107,8 @@ fun createSlidesAndChangeBackgroundTest(presentationPage: PresentationPage): Str
 }
 
 fun changeLayoutAndThemeTest(presentationPage: PresentationPage): String {
+    presentationPage.reload()
+
     presentationPage.run {
         slidesMenu.changeLayout()
         slidesMenu.changeThemes()
@@ -159,7 +164,8 @@ fun textAreaTest(presentationPage: PresentationPage): String {
 }
 
 fun docsMenuTest(presentationPage: PresentationPage): String {
-    //presentationPage.reload()
+    presentationPage.reload()
+
     presentationPage.clickDocsMenuButtons()
 
     return "DocsMenuTest passed successfully"
@@ -223,7 +229,7 @@ fun docsInsertMenuTest(presentationPage: PresentationPage): String {
         insertArt()
         insertNewSlide()
         insertSlideNumbers()
-        insertDiagram()
+        //insertDiagram()
     }
 
     return "DocsInsertMenuTest passed successfully"
@@ -248,7 +254,50 @@ fun docsSlideMenuTest(presentationPage: PresentationPage): String {
         duplicateSlide()
         deleteSlide()
         missSlide()
+        missSlide()
     }
 
     return "DocsSlideMenuTest passed successfully"
+}
+
+fun docsArrangeMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.textAreaMenu.inputText("test", 1)
+
+    presentationPage.docsArrangeMenu.run {
+        clickDropDowns()
+        turnText()
+    }
+
+    return "DocsArrangeMenuTest passed successfully"
+}
+
+fun docsToolsMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.docsToolsMenu.run {
+        //clickDropDowns()
+        extendedSearch()
+        dictionaryOpen()
+        questionsHistoryOpen()
+        settingsOpen()
+        specialSettingsOpen()
+    }
+
+    return "DocsToolsMenuTest passed successfully"
+}
+
+fun docsExtensionsMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.docsExtensionsMenu.run {
+        setExtensions()
+    }
+
+    return "DocsExtensionsMenuTest passed successfully"
+}
+
+fun docsHelpMenuTest(presentationPage: PresentationPage): String {
+    presentationPage.docsHelpMenu.run {
+        openHelp()
+        sendReviewOpen()
+        keyboardShortcutOpen()
+    }
+
+    return "DocsHelpMenuTest passed successfully"
 }

@@ -15,6 +15,6 @@ class CreatePresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractP
         createEmptyPresentationButton.click()
         wait
                 .withMessage("")
-                .until { checkUrl("https://docs.google.com/presentation/d") }
+                .until { driver.currentUrl.startsWith("https://docs.google.com/presentation/d") }
     }
 }

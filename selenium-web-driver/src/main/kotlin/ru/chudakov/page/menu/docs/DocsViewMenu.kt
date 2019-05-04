@@ -56,5 +56,6 @@ class DocsViewMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(dr
         clickDropdownButton("div[15]")
         Thread.sleep(1000)
         action.sendKeys(Keys.ESCAPE).build().perform()
+        Thread.sleep(500)
     }
 }

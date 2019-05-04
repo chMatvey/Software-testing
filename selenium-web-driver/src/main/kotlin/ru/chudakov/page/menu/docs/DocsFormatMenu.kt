@@ -22,6 +22,7 @@ class DocsFormatMenu(driver: WebDriver, wait: WebDriverWait) : AbstractDocsMenu(
         wait.until { dialog.isDisplayed }
 
         val alignText = dialog.findElement(By.xpath("div[2]/div/div[3]/div[1]"))
+        wait.until { alignText.isDisplayed }
         alignText.click()
 
         val leftMargin = dialog.findElement(By.xpath("div[2]/div/div[3]/div[2]/div/div[1]/div[2]/div[1]/div/div[2]/input"))
