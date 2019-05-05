@@ -25,4 +25,8 @@ hs_err_pid*
 .idea
 selenium-web-driver/selenium-web-driver.iml
 selenium-web-driver/target
-selenium-web-driver/.kotlintest
+selenium-web-driver/.idea
+
+music-catalog/music-catalog.iml
+music-catalog/target
+music-catalog/.idea
