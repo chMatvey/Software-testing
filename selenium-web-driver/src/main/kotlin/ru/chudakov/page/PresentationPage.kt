@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.page.menu.SlidesMenu
 import ru.chudakov.page.menu.TextAreaMenu
+import ru.chudakov.page.menu.TextAreaRightButtonDropdown
 import ru.chudakov.page.menu.docs.*
 
 class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
@@ -34,6 +35,8 @@ class PresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(dr
     val docsExtensionsMenu = DocsExtensionsMenu(driver, wait)
 
     val docsHelpMenu = DocsHelpMenu(driver, wait)
+
+    val textAreaRightButtonDropdown = TextAreaRightButtonDropdown(driver, wait)
 
     fun clickDocsMenuButtons() {
         val docsButtons = getDocsMenuButtons()

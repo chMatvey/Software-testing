@@ -1,6 +1,7 @@
 package ru.chudakov.page
 
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -48,7 +49,14 @@ class SignInPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, 
         //за отведенное время, добавит в выброшенный Exception переданное сообщение
         wait.withMessage("signUpButton does not work").until { createAccountForYourselfButton.isDisplayed }
         createAccountForYourselfButton.click()
-        wait.withMessage("Redirect to signUp page does not work").until { driver.currentUrl.startsWith(signUpPageUrl) }
+        try {
+            val waitOneSecond = WebDriverWait(driver, 1)
+            waitOneSecond.withMessage("Redirect to signUp page does not work").until { driver.currentUrl.startsWith(signUpPageUrl) }
+        } catch(e: WebDriverException) {
+            wait.withMessage("signUpButton does not work").until { createAccountForYourselfButton.isDisplayed }
+            createAccountForYourselfButton.click()
+            wait.withMessage("Redirect to signUp page does not work").until { driver.currentUrl.startsWith(signUpPageUrl) }
+        }
     }
 
     fun inputRightLogin() {

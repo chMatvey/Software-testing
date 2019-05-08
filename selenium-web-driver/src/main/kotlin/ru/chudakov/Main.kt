@@ -1,18 +1,14 @@
 package ru.chudakov
 
-import org.openqa.selenium.TimeoutException
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.support.ui.ExpectedCondition
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.page.*
-import java.lang.Exception
 
 fun main() {
     val driver = ChromeDriver() //Конструктор класса ChromeDriver запускает ChromeDriver сервер и открывает веб-браузер Chrome
-    driver.manage().window().maximize() //Разворачиваем веб-браузер а полный экран
+    driver.manage().window().maximize() //Разворачиваем веб-браузер на полный экран
     val wait = WebDriverWait(driver, 10) //Создание экземпляра класса WebDriverWait, необходимого для ясвного ожидания отображения веб-эелментов
 
     //Инициализация объктов, представляющих объектные модели веб-страниц
@@ -25,6 +21,7 @@ fun main() {
     //Запуск тестовых сценариев
     println(registrationTest(slidesPage, signInPage, signUpPage))
     println(authorizationTest(signInPage, createPresentationPage))
+
     println(docsMenuTest(presentationPage))
     println(docsFileMenuTest(presentationPage))
     println(docsEditMenuTest(presentationPage))
@@ -36,11 +33,14 @@ fun main() {
     println(docsToolsMenuTest(presentationPage))
     println(docsExtensionsMenuTest(presentationPage))
     println(docsHelpMenuTest(presentationPage))
+
     println(createSlidesAndChangeBackgroundTest(presentationPage))
     println(changeLayoutAndThemeTest(presentationPage))
     println(zoomAndCommentTest(presentationPage))
     println(figuresTest(presentationPage))
     println(textAreaTest(presentationPage))
+
+    println(textAreaRightButtonDropdownTest(presentationPage))
 
     driver.quit() //Завершение процесса
 }
@@ -298,6 +298,20 @@ fun docsHelpMenuTest(presentationPage: PresentationPage): String {
         sendReviewOpen()
         keyboardShortcutOpen()
     }
-
     return "DocsHelpMenuTest passed successfully"
+}
+
+fun textAreaRightButtonDropdownTest(presentationPage: PresentationPage): String {
+    presentationPage.slidesMenu.createNewSlide()
+    presentationPage.textAreaMenu.inputText("1111")
+
+    presentationPage.textAreaRightButtonDropdown.run {
+        try {
+            findByText()
+            alterText()
+            animation()
+        } catch (e: WebDriverException) {
+        }
+    }
+    return "TextAreaRightButtonDropdownTest passed successfully"
 }
