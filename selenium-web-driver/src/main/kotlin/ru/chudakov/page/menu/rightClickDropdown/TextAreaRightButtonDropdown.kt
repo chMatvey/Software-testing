@@ -1,4 +1,4 @@
-package ru.chudakov.page.menu
+package ru.chudakov.page.menu.rightClickDropdown
 
 import org.openqa.selenium.By
 import org.openqa.selenium.Keys
@@ -7,15 +7,14 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
+import ru.chudakov.page.menu.AbstractMenu
 
-class TextAreaRightButtonDropdown(driver: WebDriver, wait: WebDriverWait) : AbstractMenu(driver, wait) {
+class TextAreaRightButtonDropdown(driver: WebDriver, wait: WebDriverWait) : AbstractRightClickDropdown(driver, wait) {
     @FindBy(xpath = "//*[@id=\"workspace-container\"]")
-    lateinit var workSpace: WebElement
+    override lateinit var workSpace: WebElement
 
     @FindBy(xpath = "/html/body/div[14]")
-    lateinit var dropdown: WebElement
-
-    private val action = Actions(driver)
+    override lateinit var dropdown: WebElement
 
     private fun rightButtonClick(count: Int) {
         var rightClick = action.contextClick(workSpace)

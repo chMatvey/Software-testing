@@ -19,7 +19,7 @@ abstract class AbstractPage(protected val driver: WebDriver, protected val wait:
         PageFactory.initElements(driver, this)
     }
 
-    //Функция открывающий веб-страницу по заддонуму url в поле pageUrl
+    //Функция открывающий веб-страницу по заданому url в поле pageUrl
     fun open() {
         if (!driver.currentUrl.startsWith(pageUrl)) {
             driver.get(pageUrl)
