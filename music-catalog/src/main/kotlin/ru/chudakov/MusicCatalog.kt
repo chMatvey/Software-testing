@@ -7,7 +7,6 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import ru.chudakov.service.HelpService
 
-
 @SpringBootApplication
 open class MusicCatalog @Autowired constructor(private val helpService: HelpService) : CommandLineRunner {
 
