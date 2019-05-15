@@ -44,7 +44,7 @@ abstract class AbstractDocsMenu(driver: WebDriver, wait: WebDriverWait) : Abstra
         Thread.sleep(500)
     }
 
-    public open fun clickDropDowns() {
+    open fun clickDropDowns() {
         docsMenuButtonClick()
 
         xpathListOfDropdown.forEach {

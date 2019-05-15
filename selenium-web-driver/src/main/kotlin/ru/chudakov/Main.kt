@@ -321,8 +321,20 @@ fun slidesRightButtonDropdownTest(presentationPage: PresentationPage): String {
     presentationPage.slidesMenu.createNewSlide()
 
     presentationPage.slidesRightButtonDropdown.run {
+        comment()
         cut()
         copy()
+        insert()
+        insertWithoutFormatting()
+        delete()
+        createSlide()
+        duplicateSlide()
+        missSlide()
+        changeBackground()
+        changeLayout()
+        changeTheme()
+        transfer()
+        toFirstSlide()
     }
     return "SlidesRightButtonDropdownTest passed successfully"
 

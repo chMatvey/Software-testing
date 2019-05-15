@@ -1,21 +1,24 @@
 Feature: Add composition
 
   Background:
-    Given We have composition list with one composition "name", "author" and "genre"
-    And We have new composition "<name>", "<author>" and "<genre>"
-    When I try add new composition
+    Given we have composition set
 
   @Success
   Scenario Outline: add composition successfully
-    Then we can find composition in db
+    Given we have new composition "<name>", "<author>" and "<genre>"
+    When we try add this composition
+    Then we can find composition in set
     Examples:
-      | name  | author  | genre  |
-      | name1 | author1 | genre1 |
+      | name  | author  | pop |
+      | name1 | author  | pop |
+      | name  | author1 | pop |
 
   @Fail
   Scenario Outline: add composition - composition already exist
+    Given we have new composition "<name>", "<author>" and "<genre>"
+    When we try add this composition
     Then we get error with message "This composition already exist"
+    And  we can't find composition in set
     Examples:
-    Examples:
-      | name | author | genre |
-      | name | author | genre |
+      | name | author | pop |
+      | name | author | rap |

@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy
 import org.openqa.selenium.support.ui.WebDriverWait
 
 class CreatePresentationPage(driver: WebDriver, wait: WebDriverWait) : AbstractPage(driver, wait) {
-    override val pageUrl = "https://docs.google.com/presentation/u/0/";
+    override val pageUrl = "https://docs.google.com/presentation/u/0";
 
     @FindBy(xpath = "//*[@id=\":1e\"]/div[1]")
     lateinit var createEmptyPresentationButton: WebElement
