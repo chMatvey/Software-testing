@@ -1,24 +1,14 @@
 Feature: Add composition
 
-  Background:
-    Given we have composition set
-
-  @Success
-  Scenario Outline: add composition successfully
-    Given we have new composition "<name>", "<author>" and "<genre>"
+  Scenario Outline: add composition
+    Given we have new composition "<compositionName>", "<authorName>" and "<genreName>"
     When we try add this composition
-    Then we can find composition in set
-    Examples:
-      | name  | author  | pop |
-      | name1 | author  | pop |
-      | name  | author1 | pop |
+    Then new composition equal null "<result>"
 
-  @Fail
-  Scenario Outline: add composition - composition already exist
-    Given we have new composition "<name>", "<author>" and "<genre>"
-    When we try add this composition
-    Then we get error with message "This composition already exist"
-    And  we can't find composition in set
     Examples:
-      | name | author | pop |
-      | name | author | rap |
+      | compositionName  | authorName  | genreName | result |
+      | name             | author      | pop       | false  |
+      | name             | author      | pop       | true   |
+      | name             | author1     | pop       | false  |
+      | name1            | author      | pop       | false  |
+      | name             | author      | rap       | true   |
