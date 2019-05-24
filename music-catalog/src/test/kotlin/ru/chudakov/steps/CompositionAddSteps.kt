@@ -13,10 +13,10 @@ class CompositionAddSteps : En {
     private lateinit var authorName: String
     private lateinit var genreName: String
 
-    private var composition: Composition? = null
+    private val compositions = mutableListOf<Composition>()
+    private var lastComposition: Composition? = null
 
     init {
-
         Given("we have new composition {string}, {string} and {string}") { compositionName: String, authorName: String, genreName: String ->
             this.compositionName = compositionName
             this.authorName = authorName
@@ -24,11 +24,12 @@ class CompositionAddSteps : En {
         }
 
         When("we try add this composition") {
-            composition = dbManager.addComposition(compositionName, authorName, genreName)
+            lastComposition = dbManager.addComposition(compositionName, authorName, genreName)
+            lastComposition?.let { compositions.add(it) }
         }
 
         Then("new composition equal null {string}") { result: String ->
-            assertEquals(result.toBoolean(), composition == null)
+            assertEquals(result.toBoolean(), lastComposition == null)
         }
     }
 }

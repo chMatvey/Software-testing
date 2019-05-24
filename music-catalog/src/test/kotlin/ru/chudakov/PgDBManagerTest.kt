@@ -9,6 +9,6 @@ class PgDBManagerTest {
 
     @Test
     fun addComposition() {
-        print(dbManager.addComposition("name1", "author", "pop"))
+        print(dbManager.addComposition("name", "author", "pop"))
     }
 }
