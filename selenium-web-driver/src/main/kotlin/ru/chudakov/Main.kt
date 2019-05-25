@@ -19,31 +19,31 @@ fun main() {
     val presentationPage = PresentationPage(driver, wait)
 
     //Запуск тестовых сценариев
-    //println(registrationTest(slidesPage, signInPage, signUpPage))
+    println(registrationTest(slidesPage, signInPage, signUpPage))
     println(authorizationTest(signInPage, createPresentationPage))
 
-//    println(docsMenuTest(presentationPage))
-//    println(docsFileMenuTest(presentationPage))
-//    println(docsEditMenuTest(presentationPage))
-//    println(docsViewMenuTest(presentationPage))
-//    println(docsInsertMenuTest(presentationPage))
-//    println(docsFormatMenuTest(presentationPage))
-//    println(docsSlideMenuTest(presentationPage))
-//    println(docsArrangeMenuTest(presentationPage))
-//    println(docsToolsMenuTest(presentationPage))
-//    println(docsExtensionsMenuTest(presentationPage))
-//    println(docsHelpMenuTest(presentationPage))
-//
-//    println(createSlidesAndChangeBackgroundTest(presentationPage))
-//    println(changeLayoutAndThemeTest(presentationPage))
-//    println(zoomAndCommentTest(presentationPage))
-//    println(figuresTest(presentationPage))
-//    println(textAreaTest(presentationPage))
-//
-//    println(textAreaRightButtonDropdownTest(presentationPage))
+    println(docsMenuTest(presentationPage))
+    println(docsFileMenuTest(presentationPage))
+    println(docsEditMenuTest(presentationPage))
+    println(docsViewMenuTest(presentationPage))
+    println(docsInsertMenuTest(presentationPage))
+    println(docsFormatMenuTest(presentationPage))
+    println(docsSlideMenuTest(presentationPage))
+    println(docsArrangeMenuTest(presentationPage))
+    println(docsToolsMenuTest(presentationPage))
+    println(docsExtensionsMenuTest(presentationPage))
+    println(docsHelpMenuTest(presentationPage))
+
+    println(createSlidesAndChangeBackgroundTest(presentationPage))
+    println(changeLayoutAndThemeTest(presentationPage))
+    println(zoomAndCommentTest(presentationPage))
+    println(figuresTest(presentationPage))
+    println(textAreaTest(presentationPage))
+
+    println(textAreaRightButtonDropdownTest(presentationPage))
     println(slidesRightButtonDropdownTest(presentationPage))
 
-    //driver.quit() //Завершение процесса
+    driver.quit() //Завершение процесса
 }
 
 fun registrationTest(slidesPage: SlidesPage, signInPage: SignInPage, signUpPage: SignUpPage): String {
@@ -314,6 +314,7 @@ fun textAreaRightButtonDropdownTest(presentationPage: PresentationPage): String 
         } catch (e: WebDriverException) {
         }
     }
+    presentationPage.reload()
     return "TextAreaRightButtonDropdownTest passed successfully"
 }
 
