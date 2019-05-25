@@ -1,14 +1,22 @@
 package ru.chudakov
 
 import org.junit.Test
-
-import org.junit.Assert.*
+import kotlin.test.assertTrue
 
 class PgDBManagerTest {
     private val dbManager: DBManager = PgDBManager()
 
     @Test
     fun addComposition() {
-        print(dbManager.addComposition("name", "author", "pop"))
+        val c = dbManager.findCompositionByName("name", "author")
+        println(c?.author)
+    }
+
+    @Test
+    fun deleteComposition() {
+
+        dbManager.deleteCompositions("name", "author")
+        val compositions = dbManager.getAllCompositions()
+        assertTrue { !compositions.any { it.name == "name" && it.author.name == "author" } }
     }
 }
