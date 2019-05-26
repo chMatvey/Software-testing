@@ -3,7 +3,7 @@ package ru.chudakov.cucumber.steps
 import cucumber.api.java8.En
 import ru.chudakov.DBManager
 import ru.chudakov.PgDBManager
-import ru.chudakov.dao.Composition
+import ru.chudakov.data.Composition
 import kotlin.test.assertTrue
 
 class CompositionGetAllSteps : En {

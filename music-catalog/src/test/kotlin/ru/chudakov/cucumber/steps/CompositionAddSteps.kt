@@ -1,16 +1,15 @@
 package ru.chudakov.cucumber.steps
 
 import cucumber.api.java.After
-import cucumber.api.java.Before
 import cucumber.api.java8.En
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.chudakov.DBManager
 import ru.chudakov.PgDBManager
-import ru.chudakov.dao.Author
+import ru.chudakov.dao.AuthorDao
 import ru.chudakov.dao.Authors
-import ru.chudakov.dao.Composition
-import ru.chudakov.dao.Genre
+import ru.chudakov.dao.CompositionDao
+import ru.chudakov.dao.Compositions
+import ru.chudakov.data.Composition
 import kotlin.test.assertEquals
 
 class CompositionAddSteps : En {
@@ -41,8 +40,10 @@ class CompositionAddSteps : En {
     @After("@addComposition")
     fun after() {
         transaction {
-            composition?.delete()
-            Author.find { Authors.name eq "author1" }.firstOrNull()?.delete()
+            composition?.let {
+                CompositionDao.find { Compositions.name eq it.name }.firstOrNull { c -> c.author.name == it.author.name }?.delete()
+            }
+            AuthorDao.find { Authors.name eq "author1" }.firstOrNull()?.delete()
         }
     }
 }

@@ -1,12 +1,10 @@
 package ru.chudakov
 
+import org.jetbrains.exposed.dao.with
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.chudakov.dao.*
-import java.lang.Exception
-import java.lang.reflect.GenericArrayType
-import java.sql.BatchUpdateException
-import java.sql.SQLException
+import ru.chudakov.data.*
 
 class PgDBManager : DBManager {
     private var message = ""
@@ -21,11 +19,11 @@ class PgDBManager : DBManager {
             SchemaUtils.create(Genres)
             SchemaUtils.create(Compositions)
 
-            if (Genre.all().empty()) {
-                Genre.new { name = "pop" }
-                Genre.new { name = "rap" }
-                Genre.new { name = "classic" }
-                Genre.new { name = "rock" }
+            if (GenreDao.all().empty()) {
+                GenreDao.new { name = "pop" }
+                GenreDao.new { name = "rap" }
+                GenreDao.new { name = "classic" }
+                GenreDao.new { name = "rock" }
             }
         }
 
@@ -36,16 +34,17 @@ class PgDBManager : DBManager {
         var composition: Composition? = null
 
         transaction {
-            val genre = Genre.find { Genres.name eq genreName }.firstOrNull()
+            val genre = GenreDao.find { Genres.name eq genreName }.firstOrNull()
 
             if (genre == null) {
                 message = "This genre doesn't exist"
                 return@transaction
             }
 
-            val author = Author.find { Authors.name eq authorName }.firstOrNull() ?: Author.new { name = authorName }
+            val author = AuthorDao.find { Authors.name eq authorName }.firstOrNull()
+                    ?: AuthorDao.new { name = authorName }
 
-            val isExist = Composition.find {
+            val isExist = CompositionDao.find {
                 Compositions.name eq compositionName
             }.any { it.author.id == author.id }
 
@@ -54,11 +53,13 @@ class PgDBManager : DBManager {
                 return@transaction
             }
 
-            composition = Composition.new {
+            val dao = CompositionDao.new {
                 name = compositionName
                 this.author = author
                 this.genre = genre
             }
+
+            composition = Composition(dao.name, Author(author.name), Genre(genre.name))
         }
 
         return composition
@@ -66,7 +67,7 @@ class PgDBManager : DBManager {
 
     override fun deleteCompositions(compositionName: String, authorName: String) {
         transaction {
-            Composition.find { Compositions.name eq compositionName }
+            CompositionDao.find { Compositions.name eq compositionName }
                     .firstOrNull { it.author.name == authorName }?.delete()
         }
     }
@@ -75,16 +76,17 @@ class PgDBManager : DBManager {
         var result: Genre? = null
 
         transaction {
-            val isExist = !Genre.find { Genres.name eq name }.empty()
+            val isExist = !GenreDao.find { Genres.name eq name }.empty()
 
             if (isExist) {
                 message = "This genre already exist"
                 return@transaction
             }
 
-            result = Genre.new {
+            val dao = GenreDao.new {
                 this.name = name
             }
+            result = Genre(dao.name)
         }
 
         return result
@@ -92,31 +94,33 @@ class PgDBManager : DBManager {
 
     override fun deleteGenres(name: String) {
         transaction {
-            Genre.find { Genres.name eq name }.firstOrNull()?.delete()
+            GenreDao.find { Genres.name eq name }.firstOrNull()?.delete()
         }
     }
 
     override fun getAllCompositions(): List<Composition> {
         return transaction {
-            Composition.all().toList()
+            CompositionDao.all()
+                    .with(CompositionDao::author, CompositionDao::genre)
+                    .map { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) }
         }
     }
 
     override fun getAllGenres(): List<Genre> {
-        return transaction {
-            Genre.all().toList()
-        }
+        return transaction { GenreDao.all().map { Genre(it.name) } }
     }
 
     override fun findCompositionByName(compositionName: String, authorName: String): Composition? {
         var result: Composition? = null
 
         transaction {
-            val author = Author.find { Authors.name eq authorName }.firstOrNull() ?: return@transaction
+            val author = AuthorDao.find { Authors.name eq authorName }.firstOrNull() ?: return@transaction
 
-            result = Composition.find {
-                Compositions.name eq compositionName
-            }.firstOrNull { it.author == author }
+            CompositionDao.findById(1)
+
+            result = CompositionDao.find { Compositions.name eq compositionName }
+                    .with(CompositionDao::author, CompositionDao::genre).firstOrNull { it.author == author }
+                    ?.let { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) }
         }
         return result
     }
@@ -125,11 +129,11 @@ class PgDBManager : DBManager {
         var result = emptyList<Composition>()
 
         transaction {
-            val authorId = Author.find { Authors.name eq authorName }.firstOrNull()?.id ?: return@transaction
+            val authorId = AuthorDao.find { Authors.name eq authorName }.firstOrNull()?.id ?: return@transaction
 
-            result = Composition.find {
-                Compositions.author eq authorId
-            }.toList()
+            result = CompositionDao.find { Compositions.author eq authorId }
+                    .with(CompositionDao::author, CompositionDao::genre)
+                    .map { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) }
         }
         return result
     }
@@ -138,11 +142,11 @@ class PgDBManager : DBManager {
         var result = emptyList<Composition>()
 
         transaction {
-            val genreId = Genre.find { Genres.name eq genreName}.firstOrNull()?.id ?: return@transaction
+            val genreId = GenreDao.find { Genres.name eq genreName }.firstOrNull()?.id ?: return@transaction
 
-            result = Composition.find {
-                Compositions.genre eq genreId
-            }.toList()
+            result = CompositionDao.find { Compositions.genre eq genreId }
+                    .with(CompositionDao::author, CompositionDao::genre)
+                    .map { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) }
         }
         return result
     }

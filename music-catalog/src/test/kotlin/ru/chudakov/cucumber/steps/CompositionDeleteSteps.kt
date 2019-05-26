@@ -1,12 +1,12 @@
 package ru.chudakov.cucumber.steps
 
 import cucumber.api.java.After
-import cucumber.api.java.Before
 import cucumber.api.java8.En
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.chudakov.DBManager
 import ru.chudakov.PgDBManager
 import ru.chudakov.dao.*
+import ru.chudakov.data.Composition
 import kotlin.test.assertFalse
 
 class CompositionDeleteSteps : En {
@@ -39,7 +39,7 @@ class CompositionDeleteSteps : En {
     @After("@compositionDelete")
     fun after() {
         transaction {
-            Author.find { Authors.name eq "author" }.firstOrNull()?.delete()
+            AuthorDao.find { Authors.name eq "author" }.firstOrNull()?.delete()
         }
     }
 }

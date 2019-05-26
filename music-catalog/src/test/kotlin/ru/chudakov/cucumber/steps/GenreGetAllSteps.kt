@@ -3,7 +3,7 @@ package ru.chudakov.cucumber.steps
 import cucumber.api.java8.En
 import ru.chudakov.DBManager
 import ru.chudakov.PgDBManager
-import ru.chudakov.dao.Genre
+import ru.chudakov.data.Genre
 import kotlin.test.assertTrue
 
 class GenreGetAllSteps: En {

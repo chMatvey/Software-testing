@@ -1,12 +1,13 @@
 package ru.chudakov.cucumber.steps
 
 import cucumber.api.java.After
-import cucumber.api.java.Before
 import cucumber.api.java8.En
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.chudakov.DBManager
 import ru.chudakov.PgDBManager
-import ru.chudakov.dao.Genre
+import ru.chudakov.dao.GenreDao
+import ru.chudakov.dao.Genres
+import ru.chudakov.data.Genre
 import kotlin.test.assertEquals
 
 class GenreAddSteps : En {
@@ -33,7 +34,7 @@ class GenreAddSteps : En {
     @After("@addGenre")
     fun after() {
         transaction {
-            genre?.delete()
+            genre?.let { GenreDao.find { Genres.name eq it.name }.firstOrNull()?.delete() }
         }
     }
 }

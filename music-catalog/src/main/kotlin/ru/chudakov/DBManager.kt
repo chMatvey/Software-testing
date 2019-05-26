@@ -1,7 +1,7 @@
 package ru.chudakov
 
-import ru.chudakov.dao.Composition
-import ru.chudakov.dao.Genre
+import ru.chudakov.data.Composition
+import ru.chudakov.data.Genre
 
 interface DBManager {
 

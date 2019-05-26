@@ -5,7 +5,8 @@ import cucumber.api.java8.En
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.chudakov.DBManager
 import ru.chudakov.PgDBManager
-import ru.chudakov.dao.Genre
+import ru.chudakov.dao.GenreDao
+import ru.chudakov.data.Genre
 import kotlin.test.assertFalse
 
 class GenreDeleteSteps : En {
@@ -18,7 +19,7 @@ class GenreDeleteSteps : En {
     @Before("@genreDelete")
     fun before() {
         transaction {
-            Genre.new { name = "name" }
+            GenreDao.new { name = "name" }
         }
     }
 
