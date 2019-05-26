@@ -18,6 +18,8 @@ class PgDBManager : DBManager {
             SchemaUtils.create(Authors)
             SchemaUtils.create(Genres)
             SchemaUtils.create(Compositions)
+            SchemaUtils.create(Playlists)
+            SchemaUtils.create(CompositionsPlaylists)
 
             if (GenreDao.all().empty()) {
                 GenreDao.new { name = "pop" }
@@ -149,5 +151,33 @@ class PgDBManager : DBManager {
                     .map { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) }
         }
         return result
+    }
+
+    override fun getAllAuthors(): List<Author> {
+        return transaction { AuthorDao.all().map { Author(it.name) } }
+    }
+
+    override fun createPlaylist(name: String): Playlist? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun deletePlaylist(name: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getAllPlaylistNames(): List<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getPlaylist(name: String): Playlist? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun addCompositionToPlaylist(playlistName: String, compositionName: String, authorName: String): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun deleteCompositionFromPlaylist(playlistName: String, compositionName: String, authorName: String): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

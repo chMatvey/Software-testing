@@ -13,12 +13,6 @@ class PgDBManagerTest {
     private val dbManager: DBManager = PgDBManager()
 
     @Test
-    fun addComposition() {
-        val c = dbManager.findCompositionByName("name", "author")
-        println(c?.author)
-    }
-
-    @Test
     fun deleteComposition() {
         dbManager.deleteCompositions("name", "author")
         val compositions = dbManager.getAllCompositions()
