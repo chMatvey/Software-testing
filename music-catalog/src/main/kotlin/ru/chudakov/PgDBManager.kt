@@ -158,26 +158,78 @@ class PgDBManager : DBManager {
     }
 
     override fun createPlaylist(name: String): Playlist? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var playlist: Playlist? = null
+
+        transaction {
+            val isExists = PlaylistDao.find { Playlists.name eq name }.toList().isNotEmpty()
+
+            if (isExists) {
+                message = "This playlist already exist"
+                return@transaction
+            }
+            val dao = PlaylistDao.new { this.name = name }
+            playlist = Playlist(dao.name, emptyList())
+        }
+        return playlist
     }
 
     override fun deletePlaylist(name: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        transaction {
+            PlaylistDao.find { Playlists.name eq name }.firstOrNull()?.delete()
+        }
     }
 
     override fun getAllPlaylistNames(): List<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return transaction {
+            PlaylistDao.all().map { it.name }
+        }
     }
 
     override fun getPlaylist(name: String): Playlist? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var playlist: Playlist? = null
+
+        transaction {
+            val dao = PlaylistDao.find { Playlists.name eq name }.firstOrNull() ?: return@transaction
+            playlist = Playlist(dao.name, dao.compositions
+                    .map { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) })
+        }
+        return playlist
     }
 
     override fun addCompositionToPlaylist(playlistName: String, compositionName: String, authorName: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var result = false
+
+        transaction {
+            val playlist = PlaylistDao.find { Playlists.name eq playlistName }.firstOrNull() ?: return@transaction
+            val composition = CompositionDao.find { Compositions.name eq compositionName }
+                    .firstOrNull { it.author.name == authorName } ?: return@transaction
+
+            val list = playlist.compositions.toMutableList()
+            list.add(composition)
+
+            playlist.compositions = SizedCollection(list)
+            result = true
+        }
+
+        return result
     }
 
     override fun deleteCompositionFromPlaylist(playlistName: String, compositionName: String, authorName: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var result = false
+
+        transaction {
+            val playlist = PlaylistDao.find { Playlists.name eq playlistName }.firstOrNull() ?: return@transaction
+
+            val list = playlist.compositions.toMutableList().filter { it.name != compositionName && it.author.name != authorName }
+
+            playlist.compositions = SizedCollection(list)
+            result = true
+        }
+
+        return result
+    }
+
+    override fun getMessage(): String {
+        return message
     }
 }

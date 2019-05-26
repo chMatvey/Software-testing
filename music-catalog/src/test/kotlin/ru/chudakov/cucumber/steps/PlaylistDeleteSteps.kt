@@ -17,8 +17,8 @@ class PlaylistDeleteSteps : En {
     var playlists: List<PlaylistDao> = emptyList()
 
     init {
-        Given("we have unnecessary playlist {string}") { name: String ->
-            this.name = name
+        Given("we have unnecessary playlist") {
+            name = "name"
         }
 
         When("we try delete playlist") {
@@ -37,7 +37,7 @@ class PlaylistDeleteSteps : En {
     @Before("@deletePlaylist")
     fun before() {
         transaction {
-            PlaylistDao.find { Playlists.name eq name }.firstOrNull() ?: PlaylistDao.new { name = "name" }
+            PlaylistDao.find { Playlists.name eq "name" }.firstOrNull() ?: PlaylistDao.new { name = "name" }
         }
     }
 }

@@ -39,7 +39,7 @@ class PlaylistCreateSteps : En {
         }
     }
 
-    @After("CreatePlaylist")
+    @After("@CreatePlaylist")
     fun after() {
         transaction {
             PlaylistDao.find { Playlists.name eq "name1" }.firstOrNull()?.delete()

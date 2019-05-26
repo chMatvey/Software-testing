@@ -45,7 +45,7 @@ class PlaylistDeleteCompositionSteps : En {
         }
     }
 
-    @After("@AddCompositionToPlaylist")
+    @After("@DeleteCompositionFromPlaylist")
     fun after() {
         transaction {
             PlaylistDao.find { Playlists.name eq "playlist" }.firstOrNull()?.delete()

@@ -38,4 +38,6 @@ interface DBManager {
     fun addCompositionToPlaylist(playlistName: String, compositionName: String, authorName: String): Boolean
 
     fun deleteCompositionFromPlaylist(playlistName: String, compositionName: String, authorName: String): Boolean
+
+    fun getMessage(): String
 }
