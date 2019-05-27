@@ -13,7 +13,7 @@ class PgDBManager : DBManager {
         Database.connect(PgDBConfig.url, PgDBConfig.driver, PgDBConfig.userName, PgDBConfig.password)
 
         transaction {
-            addLogger()
+            //addLogger(StdOutSqlLogger)
 
             SchemaUtils.create(Authors)
             SchemaUtils.create(Genres)
