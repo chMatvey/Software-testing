@@ -118,8 +118,6 @@ class PgDBManager : DBManager {
         transaction {
             val author = AuthorDao.find { Authors.name eq authorName }.firstOrNull() ?: return@transaction
 
-            CompositionDao.findById(1)
-
             result = CompositionDao.find { Compositions.name eq compositionName }
                     .with(CompositionDao::author, CompositionDao::genre).firstOrNull { it.author == author }
                     ?.let { Composition(it.name, Author(it.author.name), Genre(it.genre.name)) }
