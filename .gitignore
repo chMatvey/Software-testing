@@ -23,6 +23,10 @@
 hs_err_pid*
 
 .idea
+.iml
+
+//target
+
 selenium-web-driver/selenium-web-driver.iml
 selenium-web-driver/target
 selenium-web-driver/.idea
@@ -30,3 +34,8 @@ selenium-web-driver/.idea
 music-catalog/music-catalog.iml
 music-catalog/target
 music-catalog/.idea
+
+
+appium/appium.iml
+appium/target
+appium/.idea
