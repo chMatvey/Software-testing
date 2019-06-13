@@ -6,7 +6,7 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator
 import org.openqa.selenium.support.PageFactory
 import org.openqa.selenium.support.ui.WebDriverWait
 
-abstract class AbstractPage(protected val driver: AndroidDriver<MobileElement>, protected val wait: WebDriverWait) {
+abstract class AbstractPage(private val driver: AndroidDriver<MobileElement>) {
 
     init {
         initElements()

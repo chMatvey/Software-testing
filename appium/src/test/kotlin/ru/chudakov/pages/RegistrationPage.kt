@@ -6,7 +6,7 @@ import io.appium.java_client.android.AndroidElement
 import io.appium.java_client.pagefactory.AndroidFindBy
 import org.openqa.selenium.support.ui.WebDriverWait
 
-class RegistrationPage(driver: AndroidDriver<MobileElement>, wait: WebDriverWait): AbstractPage(driver, wait) {
+class RegistrationPage(driver: AndroidDriver<MobileElement>): AbstractPage(driver) {
 
     @AndroidFindBy(id = "com.twitter.android:id/primary_action")
     lateinit var createAccountButton: AndroidElement
