@@ -255,6 +255,39 @@ class TwitterTest {
         }
     }
 
+    @Test
+    fun message() {
+        val messagePage = MessagePage(driver)
+
+        messagePage.run {
+            wait.until { messageBtn.isDisplayed }
+            messageBtn.click()
+
+            wait.until { createMessage.isDisplayed }
+            createMessage.click()
+
+            wait.until { profile.isDisplayed }
+            profile.click()
+
+            wait.until { nextBtn.isDisplayed }
+            nextBtn.click()
+
+            wait.until { tweetText.isDisplayed }
+            tweetText.click()
+
+            wait.until { tweetText.isDisplayed }
+            tweetText.sendKeys("qwerty")
+
+            wait.until { sendBtn.isDisplayed }
+            sendBtn.click()
+
+            wait.until { backwardBtn.isDisplayed }
+            backwardBtn.click()
+
+            wait.until { messageBtn.isDisplayed }
+        }
+    }
+
     @AfterAll
     fun afterAll() {
         driver.quit()
