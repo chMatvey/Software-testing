@@ -15,6 +15,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.pages.AuthorizationPage
+import ru.chudakov.pages.CreateTwitPage
 import ru.chudakov.pages.HomePage
 import ru.chudakov.pages.RegistrationPage
 import java.net.URL
@@ -26,6 +27,8 @@ import kotlin.test.assertNotEquals
 class TwitterTest {
     private val driver: AndroidDriver<MobileElement>
     private val wait: WebDriverWait
+    private val action: AndroidTouchAction
+    private val homePage: HomePage
 
     init {
         val capabilities = DesiredCapabilities()
@@ -36,10 +39,19 @@ class TwitterTest {
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "uiautomator2")
         capabilities.setCapability("appPackage", "com.twitter.android")
         capabilities.setCapability("appActivity", "com.twitter.app.main.MainActivity")
-        //capabilities.setCapability("appWaitActivity","com.twitter.app.main.MainActivity")
+        capabilities.setCapability("appWaitActivity","com.twitter.app.main.MainActivity")
 
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
         wait = WebDriverWait(driver, 10)
+        action = AndroidTouchAction(driver)
+        homePage = HomePage(driver)
+
+        homePage.run {
+            wait.until { homePage.firstButton.isDisplayed }
+            firstButton.click()
+            wait.until { allowButton.isDisplayed }
+            allowButton.click()
+        }
     }
 
     @Test
@@ -115,14 +127,13 @@ class TwitterTest {
             driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
         }
 
-        val homePage = HomePage(driver)
-        val action = AndroidTouchAction(driver)
+        //val homePage = HomePage(driver)
 
         homePage.run {
-            wait.until { homePage.firstButton.isDisplayed }
-            firstButton.click()
-            wait.until { allowButton.isDisplayed }
-            allowButton.click()
+//            wait.until { homePage.firstButton.isDisplayed }
+//            firstButton.click()
+//            wait.until { allowButton.isDisplayed }
+//            allowButton.click()
 
             wait.until { toolbar.isDisplayed }
             tweetCurationAction.click()
@@ -147,6 +158,46 @@ class TwitterTest {
             action.perform()
             wait.until { toolbar.isDisplayed }
         }
+    }
+
+    @Test
+    fun createTwit() {
+        //driver.startActivity(Activity("com.twitter.composer", "ComposerActivity"))
+
+        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
+            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
+        }
+        wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
+
+        val createTwitBtn = driver.findElement(By.id("com.twitter.android:id/composer_write"))
+        wait.until { createTwitBtn.isDisplayed }
+        createTwitBtn.click()
+
+        val createTwitPage = CreateTwitPage(driver)
+
+        createTwitPage.run {
+            wait.until { textArea.isDisplayed }
+
+            imageView.click()
+            wait.until { accountFrame.isDisplayed }
+            action.press(PointOption.point(350, 350))
+            action.release()
+            action.perform()
+            wait.until { textArea.isDisplayed }
+
+            textInput.sendKeys("qwerty")
+
+            gifBtn.click()
+            wait.until { gifView.isDisplayed }
+            gifView.click()
+            wait.until { gifImageView.isDisplayed }
+            gifImageView.click()
+            wait.until { textArea.isDisplayed }
+
+            twitButton.click()
+        }
+
+        wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
     }
 
     @AfterAll
