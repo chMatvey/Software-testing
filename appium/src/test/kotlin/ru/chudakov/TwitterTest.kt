@@ -1,22 +1,17 @@
 package ru.chudakov
 
-import io.appium.java_client.MobileDriver
 import io.appium.java_client.MobileElement
+import io.appium.java_client.PerformsTouchActions
 import io.appium.java_client.TouchAction
 import io.appium.java_client.android.Activity
 import io.appium.java_client.android.AndroidDriver
-import io.appium.java_client.android.AndroidElement
 import io.appium.java_client.android.AndroidTouchAction
 import io.appium.java_client.remote.MobileCapabilityType
-import io.appium.java_client.touch.offset.ElementOption
 import io.appium.java_client.touch.offset.PointOption
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.openqa.selenium.By
-import org.openqa.selenium.Point
-import org.openqa.selenium.WebElement
-import org.openqa.selenium.interactions.touch.TouchActions
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.pages.AuthorizationPage
@@ -38,7 +33,7 @@ class TwitterTest {
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android")
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Custom Phone")
         capabilities.setCapability(MobileCapabilityType.UDID, "192.168.147.105:5555")
-        //capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "uiautomator2")
+        capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "uiautomator2")
         capabilities.setCapability("appPackage", "com.twitter.android")
         capabilities.setCapability("appActivity", "com.twitter.app.main.MainActivity")
         //capabilities.setCapability("appWaitActivity","com.twitter.app.main.MainActivity")
@@ -115,19 +110,42 @@ class TwitterTest {
     }
 
     @Test
-    fun tweetList() {
-        //driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
+    fun home() {
+        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
+            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
+        }
 
         val homePage = HomePage(driver)
-
-        val action = TouchAction<AndroidTouchAction>(driver)
+        val action = AndroidTouchAction(driver)
 
         homePage.run {
-            wait.until { homePage.tweetCurationAction.isDisplayed }
+            wait.until { homePage.firstButton.isDisplayed }
+            firstButton.click()
+            wait.until { allowButton.isDisplayed }
+            allowButton.click()
+
+            wait.until { toolbar.isDisplayed }
             tweetCurationAction.click()
-            action.press(ElementOption())
+            wait.until { gripper.isDisplayed }
+
+            action.press(PointOption.point(400, 150))
             action.release()
             action.perform()
+            wait.until { toolbar.isDisplayed }
+
+            timelineSwitch.click()
+            wait.until { gripper.isDisplayed }
+            action.press(PointOption.point(400, 150))
+            action.release()
+            action.perform()
+            wait.until { toolbar.isDisplayed }
+
+            imageButton.click()
+            wait.until { drawer.isDisplayed }
+            action.press(PointOption.point(700, 400))
+            action.release()
+            action.perform()
+            wait.until { toolbar.isDisplayed }
         }
     }
 

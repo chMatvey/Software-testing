@@ -4,7 +4,6 @@ import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.AndroidElement
 import io.appium.java_client.pagefactory.AndroidFindBy
-import org.openqa.selenium.support.ui.WebDriverWait
 
 class AuthorizationPage(driver: AndroidDriver<MobileElement>) : AbstractPage(driver) {
 
