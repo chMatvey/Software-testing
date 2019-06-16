@@ -14,10 +14,7 @@ import org.junit.jupiter.api.TestInstance
 import org.openqa.selenium.By
 import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
-import ru.chudakov.pages.AuthorizationPage
-import ru.chudakov.pages.CreateTwitPage
-import ru.chudakov.pages.HomePage
-import ru.chudakov.pages.RegistrationPage
+import ru.chudakov.pages.*
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertFalse
@@ -198,6 +195,43 @@ class TwitterTest {
         }
 
         wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
+    }
+
+    @Test
+    fun search() {
+        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
+            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
+        }
+
+        val searchPage = SearchPage(driver)
+
+        searchPage.run {
+            wait.until { searchBtn.isDisplayed }
+            searchBtn.click()
+
+            wait.until { searchTwitBtn.isDisplayed }
+            searchTwitBtn.click()
+
+            wait.until { searchTwitInput.isDisplayed }
+            searchTwitInput.sendKeys("a")
+
+            wait.until { searchResult.isDisplayed }
+            searchResult.click()
+
+            wait.until { settingBtn.isDisplayed }
+            settingBtn.click()
+
+            wait.until { title.isDisplayed }
+            title.click()
+
+            wait.until { settingsToolbar.isDisplayed }
+            closeBtn.click()
+
+            wait.until { settingBtn.isDisplayed }
+            closeBtn.click()
+
+            wait.until { searchBtn.isDisplayed }
+        }
     }
 
     @AfterAll
