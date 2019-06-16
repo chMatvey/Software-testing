@@ -14,7 +14,6 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.pages.*
 import java.net.URL
-import java.util.concurrent.TimeUnit
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 
@@ -23,7 +22,6 @@ class TwitterTest {
     private val driver: AndroidDriver<MobileElement>
     private val wait: WebDriverWait
     private val action: AndroidTouchAction
-    private val homePage: HomePage
 
     init {
         val capabilities = DesiredCapabilities()
@@ -39,21 +37,35 @@ class TwitterTest {
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
         wait = WebDriverWait(driver, 10)
         action = AndroidTouchAction(driver)
-        homePage = HomePage(driver)
 
-        homePage.run {
-            wait.until { homePage.firstButton.isDisplayed }
-            firstButton.click()
-            wait.until { allowButton.isDisplayed }
-            allowButton.click()
-        }
+        wait.until { driver.findElementById("android:id/button1").isDisplayed }
+        val firstButton = driver.findElementById("android:id/button1")
+        firstButton.click()
+
+        wait.until { driver.findElementById("com.android.packageinstaller:id/permission_allow_button").isDisplayed }
+        val allowButton = driver.findElementById("com.android.packageinstaller:id/permission_allow_button")
+        allowButton.click()
     }
 
+    //1
     @Test
     fun createAccount() {
+        val accManager = AccountsManagePage(driver)
+
+        accManager.run {
+            wait.until { imgBtn.isDisplayed }
+            imgBtn.click()
+
+            wait.until { accountBtn.isDisplayed }
+            accountBtn.click()
+
+            wait.until { addExistAccountBtn.isDisplayed }
+            addExistAccountBtn.click()
+        }
+
         val registrationPage = RegistrationPage(driver)
 
-        driver.startActivity(Activity("com.twitter.android", "LoginActivity"))
+        //driver.startActivity(Activity("com.twitter.android", "LoginActivity"))
 
         registrationPage.run {
             wait.until { signUpButton.isDisplayed }
@@ -63,28 +75,42 @@ class TwitterTest {
             nameInput.sendKeys("Matvey")
 
             phoneNumberInput.sendKeys("1")
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS)
+            nextButton.click()
             assertFalse { nextButton.isEnabled }
 
             phoneNumberInput.clear()
             phoneNumberInput.sendKeys(System.getenv("PHONE_NUMBER"))
-            wait.until { nextButton.isDisplayed }
+            nextButton.click()
+            assertFalse { nextButton.isEnabled }
 
             wait.until { emailInsteadButton.isDisplayed }
             emailInsteadButton.click()
             wait.until { emailInput.isDisplayed }
 
             emailInput.sendKeys("1")
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS)
+            assertFalse { nextButton.isEnabled }
             assertFalse { nextButton.isEnabled }
 
             emailInput.clear()
             emailInput.sendKeys(System.getenv("EMAIL"))
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS)
-            wait.until { nextButton.isDisplayed }
+            emailInput.sendKeys("1")
+            assertFalse { nextButton.isEnabled }
+
+            backBtn.click()
+        }
+
+        val authorizationPage = AuthorizationPage(driver)
+
+        authorizationPage.run {
+            wait.until { loginInput.isDisplayed }
+            loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
+            passwordInput.clear()
+            passwordInput.sendKeys(System.getenv("TWITTER_PASSWORD"))
+            loginButton.click()
         }
     }
 
+    //2
     @Test
     fun login() {
         val authorizationPage = AuthorizationPage(driver)
@@ -99,11 +125,6 @@ class TwitterTest {
             navigateUp.click()
 
             wait.until { loginInput.isDisplayed }
-            loginInput.sendKeys("1")
-            passwordInput.sendKeys("1")
-            loginButton.click()
-
-            wait.until { loginButton.isDisplayed }
             loginInput.clear()
             loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
             passwordInput.clear()
@@ -116,36 +137,67 @@ class TwitterTest {
         }
     }
 
+    //3
     @Test
-    fun home() {
-        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
-            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
+    fun loginWithUnExistAccount() {
+        val accManager = AccountsManagePage(driver)
+
+        accManager.run {
+            wait.until { imgBtn.isDisplayed }
+            imgBtn.click()
+
+            wait.until { accountBtn.isDisplayed }
+            accountBtn.click()
+
+            wait.until { addExistAccountBtn.isDisplayed }
+            addExistAccountBtn.click()
         }
 
-        //val homePage = HomePage(driver)
+        val authorizationPage = AuthorizationPage(driver)
+
+        authorizationPage.run {
+            wait.until { loginInput.isDisplayed }
+            loginInput.sendKeys("1")
+            passwordInput.sendKeys("1")
+            loginButton.click()
+
+            wait.until { loginInput.isDisplayed }
+            loginInput.clear()
+            passwordInput.clear()
+
+            wait.until { loginInput.isDisplayed }
+            loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
+            passwordInput.clear()
+            passwordInput.sendKeys(System.getenv("TWITTER_PASSWORD"))
+            loginButton.click()
+        }
+    }
+
+    //4
+    @Test
+    fun home() {
+        val homePage = HomePage(driver)
 
         homePage.run {
-//            wait.until { homePage.firstButton.isDisplayed }
-//            firstButton.click()
-//            wait.until { allowButton.isDisplayed }
-//            allowButton.click()
+            wait.until { view.isDisplayed }
+            view.click()
 
             wait.until { toolbar.isDisplayed }
             tweetCurationAction.click()
-            wait.until { gripper.isDisplayed }
 
+            wait.until { gripper.isDisplayed }
             action.press(PointOption.point(400, 150))
             action.release()
             action.perform()
-            wait.until { toolbar.isDisplayed }
 
+            wait.until { toolbar.isDisplayed }
             timelineSwitch.click()
             wait.until { gripper.isDisplayed }
             action.press(PointOption.point(400, 150))
             action.release()
             action.perform()
-            wait.until { toolbar.isDisplayed }
 
+            wait.until { toolbar.isDisplayed }
             imageButton.click()
             wait.until { drawer.isDisplayed }
             action.press(PointOption.point(700, 400))
@@ -155,12 +207,10 @@ class TwitterTest {
         }
     }
 
+    //5
     @Test
     fun createTwit() {
         //driver.startActivity(Activity("com.twitter.composer", "ComposerActivity"))
-        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
-            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
-        }
         wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
 
         val createTwitBtn = driver.findElement(By.id("com.twitter.android:id/composer_write"))
@@ -183,8 +233,10 @@ class TwitterTest {
 
             gifBtn.click()
             wait.until { gifView.isDisplayed }
+
             gifView.click()
             wait.until { gifImageView.isDisplayed }
+
             gifImageView.click()
             wait.until { textArea.isDisplayed }
 
@@ -194,12 +246,9 @@ class TwitterTest {
         wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
     }
 
+    //6
     @Test
     fun search() {
-        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
-            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
-        }
-
         val searchPage = SearchPage(driver)
 
         searchPage.run {
@@ -231,12 +280,9 @@ class TwitterTest {
         }
     }
 
+    //7
     @Test
     fun notification() {
-        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
-            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
-        }
-
         val notificationPage = NotificationPage(driver)
 
         notificationPage.run {
@@ -255,6 +301,7 @@ class TwitterTest {
         }
     }
 
+    //8
     @Test
     fun message() {
         val messagePage = MessagePage(driver)
@@ -286,6 +333,12 @@ class TwitterTest {
 
             wait.until { messageBtn.isDisplayed }
         }
+    }
+
+    //9
+    @Test
+    fun profile() {
+
     }
 
     @AfterAll

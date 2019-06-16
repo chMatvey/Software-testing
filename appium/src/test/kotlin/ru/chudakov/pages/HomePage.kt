@@ -7,11 +7,8 @@ import io.appium.java_client.pagefactory.AndroidFindBy
 
 class HomePage(driver: AndroidDriver<MobileElement>) : AbstractPage(driver) {
 
-    @AndroidFindBy(id = "android:id/button1")
-    lateinit var firstButton: AndroidElement
-
-    @AndroidFindBy(id = "com.android.packageinstaller:id/permission_allow_button")
-    lateinit var allowButton: AndroidElement
+    @AndroidFindBy(xpath = "//android.view.View[@content-desc=\"Home Tab\"]")
+    lateinit var view: AndroidElement
 
     @AndroidFindBy(id = "com.twitter.android:id/toolbar")
     lateinit var toolbar: AndroidElement

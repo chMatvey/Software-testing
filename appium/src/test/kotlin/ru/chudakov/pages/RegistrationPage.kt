@@ -33,4 +33,7 @@ class RegistrationPage(driver: AndroidDriver<MobileElement>): AbstractPage(drive
 
     @AndroidFindBy(id = "com.twitter.android:id/phone_or_email_field")
     lateinit var emailInput: AndroidElement
+
+    @AndroidFindBy(id = "com.twitter.android:id/back_button")
+    lateinit var backBtn: AndroidElement
 }
