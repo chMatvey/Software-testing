@@ -1,8 +1,6 @@
 package ru.chudakov
 
 import io.appium.java_client.MobileElement
-import io.appium.java_client.PerformsTouchActions
-import io.appium.java_client.TouchAction
 import io.appium.java_client.android.Activity
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.AndroidTouchAction
@@ -160,7 +158,6 @@ class TwitterTest {
     @Test
     fun createTwit() {
         //driver.startActivity(Activity("com.twitter.composer", "ComposerActivity"))
-
         if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
             driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
         }
@@ -231,6 +228,30 @@ class TwitterTest {
             closeBtn.click()
 
             wait.until { searchBtn.isDisplayed }
+        }
+    }
+
+    @Test
+    fun notification() {
+        if (driver.currentActivity() != "com.twitter.app.main.MainActivity") {
+            driver.startActivity(Activity("com.twitter.app.main", "MainActivity"))
+        }
+
+        val notificationPage = NotificationPage(driver)
+
+        notificationPage.run {
+            wait.until { notificationBtn.isDisplayed }
+            notificationBtn.click()
+
+            wait.until { mentions.isDisplayed }
+            mentions.click()
+
+            wait.until { settingsBtn.isDisplayed }
+            settingsBtn.click()
+
+            wait.until { backwardBtn.isDisplayed }
+            backwardBtn.click()
+            wait.until { settingsBtn.isDisplayed }
         }
     }
 
