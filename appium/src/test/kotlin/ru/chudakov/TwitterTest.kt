@@ -395,7 +395,60 @@ class TwitterTest {
 
     @Test
     fun profile() {
+        wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
+        val navigation = driver.findElementByAccessibilityId("Show navigation drawer")
+        navigation.click()
 
+        val profilePage = ProfilePage(driver)
+
+        profilePage.run {
+            wait.until { profileBtn.isDisplayed }
+            profileBtn.click()
+
+            wait.until { tweetsBtn.isDisplayed }
+            tweetsBtn.click()
+            wait.until { title.isDisplayed }
+
+            wait.until { tweetsAndRepliesBtn.isDisplayed }
+            tweetsAndRepliesBtn.click()
+            wait.until { title.isDisplayed }
+
+            wait.until { mediaBtn.isDisplayed }
+            mediaBtn.click()
+            wait.until { emptyTitle.isDisplayed }
+
+            wait.until { likesBtn.isDisplayed }
+            likesBtn.click()
+            wait.until { emptyTitle.isDisplayed }
+        }
+
+        driver.findElementByAccessibilityId("Navigate up").click()
+    }
+
+    @Test
+    fun lists() {
+        wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
+        val navigation = driver.findElementByAccessibilityId("Show navigation drawer")
+        navigation.click()
+
+        val listsPage = ListsPage(driver)
+
+        listsPage.run {
+            wait.until { listsBtn.isDisplayed }
+            listsBtn.click()
+
+            wait.until { createBtn.isDisplayed }
+            createBtn.click()
+
+            wait.until { nameInput.isDisplayed }
+            nameInput.sendKeys("qwerty")
+            descriptionInput.sendKeys("qwerty")
+
+            saveBtn.click()
+            wait.until { createBtn.isDisplayed }
+        }
+
+        driver.findElementByAccessibilityId("Navigate up").click()
     }
 
     @AfterAll
