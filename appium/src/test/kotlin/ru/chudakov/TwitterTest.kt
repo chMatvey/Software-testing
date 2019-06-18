@@ -5,6 +5,7 @@ import io.appium.java_client.android.Activity
 import io.appium.java_client.android.AndroidDriver
 import io.appium.java_client.android.AndroidTouchAction
 import io.appium.java_client.remote.MobileCapabilityType
+import io.appium.java_client.touch.WaitOptions
 import io.appium.java_client.touch.offset.PointOption
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
@@ -14,8 +15,10 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.WebDriverWait
 import ru.chudakov.pages.*
 import java.net.URL
+import java.time.Duration.ofMillis
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TwitterTest {
@@ -32,7 +35,7 @@ class TwitterTest {
         capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "uiautomator2")
         capabilities.setCapability("appPackage", "com.twitter.android")
         capabilities.setCapability("appActivity", "com.twitter.app.main.MainActivity")
-        capabilities.setCapability("appWaitActivity","com.twitter.app.main.MainActivity")
+        capabilities.setCapability("appWaitActivity", "com.twitter.app.main.MainActivity")
 
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
         wait = WebDriverWait(driver, 10)
@@ -45,11 +48,11 @@ class TwitterTest {
         wait.until { driver.findElementById("com.android.packageinstaller:id/permission_allow_button").isDisplayed }
         val allowButton = driver.findElementById("com.android.packageinstaller:id/permission_allow_button")
         allowButton.click()
+        wait.until { driver.findElementById("com.twitter.android:id/toolbar").isDisplayed }
     }
 
-    //1
     @Test
-    fun createAccount() {
+    fun createAccountWithPhone() {
         val accManager = AccountsManagePage(driver)
 
         accManager.run {
@@ -64,8 +67,6 @@ class TwitterTest {
         }
 
         val registrationPage = RegistrationPage(driver)
-
-        //driver.startActivity(Activity("com.twitter.android", "LoginActivity"))
 
         registrationPage.run {
             wait.until { signUpButton.isDisplayed }
@@ -82,6 +83,44 @@ class TwitterTest {
             phoneNumberInput.sendKeys(System.getenv("PHONE_NUMBER"))
             nextButton.click()
             assertFalse { nextButton.isEnabled }
+
+            backBtn.click()
+        }
+
+        val authorizationPage = AuthorizationPage(driver)
+
+        authorizationPage.run {
+            wait.until { loginInput.isDisplayed }
+            loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
+            passwordInput.clear()
+            passwordInput.sendKeys(System.getenv("TWITTER_PASSWORD"))
+            loginButton.click()
+        }
+    }
+
+    @Test
+    fun createAccountWithEmail() {
+        val accManager = AccountsManagePage(driver)
+
+        accManager.run {
+            wait.until { imgBtn.isDisplayed }
+            imgBtn.click()
+
+            wait.until { accountBtn.isDisplayed }
+            accountBtn.click()
+
+            wait.until { addExistAccountBtn.isDisplayed }
+            addExistAccountBtn.click()
+        }
+
+        val registrationPage = RegistrationPage(driver)
+
+        registrationPage.run {
+            wait.until { signUpButton.isDisplayed }
+            signUpButton.click()
+
+            wait.until { nameInput.isDisplayed }
+            nameInput.sendKeys("Matvey")
 
             wait.until { emailInsteadButton.isDisplayed }
             emailInsteadButton.click()
@@ -110,9 +149,8 @@ class TwitterTest {
         }
     }
 
-    //2
     @Test
-    fun login() {
+    fun loginWithExistAccount() {
         val authorizationPage = AuthorizationPage(driver)
 
         driver.startActivity(Activity("com.twitter.android", "LoginActivity"))
@@ -137,7 +175,6 @@ class TwitterTest {
         }
     }
 
-    //3
     @Test
     fun loginWithUnExistAccount() {
         val accManager = AccountsManagePage(driver)
@@ -173,7 +210,6 @@ class TwitterTest {
         }
     }
 
-    //4
     @Test
     fun home() {
         val homePage = HomePage(driver)
@@ -207,7 +243,6 @@ class TwitterTest {
         }
     }
 
-    //5
     @Test
     fun createTwit() {
         //driver.startActivity(Activity("com.twitter.composer", "ComposerActivity"))
@@ -246,7 +281,6 @@ class TwitterTest {
         wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
     }
 
-    //6
     @Test
     fun search() {
         val searchPage = SearchPage(driver)
@@ -280,7 +314,6 @@ class TwitterTest {
         }
     }
 
-    //7
     @Test
     fun notification() {
         val notificationPage = NotificationPage(driver)
@@ -301,7 +334,6 @@ class TwitterTest {
         }
     }
 
-    //8
     @Test
     fun message() {
         val messagePage = MessagePage(driver)
@@ -335,7 +367,32 @@ class TwitterTest {
         }
     }
 
-    //9
+    @Test
+    fun widget() {
+        driver.navigate().back()
+        if (driver.findElementsByAccessibilityId("Apps list").isNotEmpty()) {
+            val appsListBtn = driver.findElementByAccessibilityId("Apps list") as MobileElement
+            appsListBtn.click()
+        }
+        wait.until { driver.findElementById("com.android.launcher3:id/search_box_input").isDisplayed }
+
+        val size = driver.manage().window().size
+        val anchor = (size.width * 0.1).toInt()
+        val startPoint = (size.height * 0.9).toInt()
+        val endPoint = (size.height * 0.1).toInt()
+
+        action
+                .press(PointOption.point(anchor, startPoint))
+                .waitAction(WaitOptions.waitOptions(ofMillis(1000)))
+                .moveTo(PointOption.point(anchor, endPoint))
+                .release().perform()
+
+        action
+                .longPress(PointOption.point(290, 1060))
+                .moveTo(PointOption.point(anchor, startPoint))
+                .release().perform()
+    }
+
     @Test
     fun profile() {
 
