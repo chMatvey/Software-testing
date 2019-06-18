@@ -53,6 +53,8 @@ class TwitterTest {
 
     @Test
     fun createAccountWithPhone() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val accManager = AccountsManagePage(driver)
 
         accManager.run {
@@ -86,20 +88,12 @@ class TwitterTest {
 
             backBtn.click()
         }
-
-        val authorizationPage = AuthorizationPage(driver)
-
-        authorizationPage.run {
-            wait.until { loginInput.isDisplayed }
-            loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
-            passwordInput.clear()
-            passwordInput.sendKeys(System.getenv("TWITTER_PASSWORD"))
-            loginButton.click()
-        }
     }
 
     @Test
     fun createAccountWithEmail() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val accManager = AccountsManagePage(driver)
 
         accManager.run {
@@ -122,35 +116,27 @@ class TwitterTest {
             wait.until { nameInput.isDisplayed }
             nameInput.sendKeys("Matvey")
 
+            phoneNumberInput.click()
+
             wait.until { emailInsteadButton.isDisplayed }
             emailInsteadButton.click()
             wait.until { emailInput.isDisplayed }
 
             emailInput.sendKeys("1")
             assertFalse { nextButton.isEnabled }
-            assertFalse { nextButton.isEnabled }
 
             emailInput.clear()
             emailInput.sendKeys(System.getenv("EMAIL"))
-            emailInput.sendKeys("1")
             assertFalse { nextButton.isEnabled }
 
             backBtn.click()
-        }
-
-        val authorizationPage = AuthorizationPage(driver)
-
-        authorizationPage.run {
-            wait.until { loginInput.isDisplayed }
-            loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
-            passwordInput.clear()
-            passwordInput.sendKeys(System.getenv("TWITTER_PASSWORD"))
-            loginButton.click()
         }
     }
 
     @Test
     fun loginWithExistAccount() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val authorizationPage = AuthorizationPage(driver)
 
         driver.startActivity(Activity("com.twitter.android", "LoginActivity"))
@@ -177,6 +163,8 @@ class TwitterTest {
 
     @Test
     fun loginWithUnExistAccount() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val accManager = AccountsManagePage(driver)
 
         accManager.run {
@@ -199,19 +187,13 @@ class TwitterTest {
             loginButton.click()
 
             wait.until { loginInput.isDisplayed }
-            loginInput.clear()
-            passwordInput.clear()
-
-            wait.until { loginInput.isDisplayed }
-            loginInput.sendKeys(System.getenv("PHONE_NUMBER"))
-            passwordInput.clear()
-            passwordInput.sendKeys(System.getenv("TWITTER_PASSWORD"))
-            loginButton.click()
         }
     }
 
     @Test
-    fun home() {
+    fun viewHomePage() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val homePage = HomePage(driver)
 
         homePage.run {
@@ -245,8 +227,10 @@ class TwitterTest {
 
     @Test
     fun createTwit() {
-        //driver.startActivity(Activity("com.twitter.composer", "ComposerActivity"))
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         wait.until { driver.findElement(By.id("com.twitter.android:id/composer_write")).isDisplayed }
+        driver.findElementByAccessibilityId("Home Tab").click()
 
         val createTwitBtn = driver.findElement(By.id("com.twitter.android:id/composer_write"))
         wait.until { createTwitBtn.isDisplayed }
@@ -282,7 +266,9 @@ class TwitterTest {
     }
 
     @Test
-    fun search() {
+    fun searchInfo() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val searchPage = SearchPage(driver)
 
         searchPage.run {
@@ -315,7 +301,9 @@ class TwitterTest {
     }
 
     @Test
-    fun notification() {
+    fun editNotification() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val notificationPage = NotificationPage(driver)
 
         notificationPage.run {
@@ -335,7 +323,9 @@ class TwitterTest {
     }
 
     @Test
-    fun message() {
+    fun sendMessage() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         val messagePage = MessagePage(driver)
 
         messagePage.run {
@@ -368,7 +358,9 @@ class TwitterTest {
     }
 
     @Test
-    fun widget() {
+    fun createWidget() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         driver.navigate().back()
         if (driver.findElementsByAccessibilityId("Apps list").isNotEmpty()) {
             val appsListBtn = driver.findElementByAccessibilityId("Apps list") as MobileElement
@@ -394,7 +386,9 @@ class TwitterTest {
     }
 
     @Test
-    fun profile() {
+    fun viewProfilePage() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
         val navigation = driver.findElementByAccessibilityId("Show navigation drawer")
         navigation.click()
@@ -426,7 +420,9 @@ class TwitterTest {
     }
 
     @Test
-    fun lists() {
+    fun createLists() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
         wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
         val navigation = driver.findElementByAccessibilityId("Show navigation drawer")
         navigation.click()
@@ -446,6 +442,35 @@ class TwitterTest {
 
             saveBtn.click()
             wait.until { createBtn.isDisplayed }
+        }
+
+        driver.findElementByAccessibilityId("Navigate up").click()
+    }
+
+    @Test
+    fun deleteAllBookmarks() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
+        wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
+        val navigation = driver.findElementByAccessibilityId("Show navigation drawer")
+        navigation.click()
+
+        val bookmarksPage = BookmarksPage(driver)
+
+        bookmarksPage.run {
+            wait.until { bookmarksBtn.isDisplayed }
+            bookmarksBtn.click()
+
+            wait.until { moreOptionBtn.isDisplayed }
+            moreOptionBtn.click()
+
+            wait.until { deleteAllBtn.isDisplayed }
+            deleteAllBtn.click()
+
+            wait.until { approvalBtn.isDisplayed }
+            approvalBtn.click()
+
+            wait.until { moreOptionBtn.isDisplayed }
         }
 
         driver.findElementByAccessibilityId("Navigate up").click()
