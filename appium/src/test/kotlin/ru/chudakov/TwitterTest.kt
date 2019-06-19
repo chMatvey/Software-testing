@@ -476,6 +476,39 @@ class TwitterTest {
         driver.findElementByAccessibilityId("Navigate up").click()
     }
 
+    @Test
+    fun openMoments(){
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
+        wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
+        val navigation = driver.findElementByAccessibilityId("Show navigation drawer")
+        navigation.click()
+
+        val momentsPage = MomentsPage(driver)
+
+        momentsPage.run {
+            wait.until { momentsBtn.isDisplayed }
+            momentsBtn.click()
+
+            wait.until { momentsArea.isDisplayed }
+        }
+
+        driver.findElementByAccessibilityId("Navigate up").click()
+    }
+
+    @Test
+    fun changeTheme() {
+        driver.startActivity(Activity("com.twitter.android", "com.twitter.app.main.MainActivity"))
+
+        wait.until { driver.findElementByAccessibilityId("Show navigation drawer").isDisplayed }
+        val navigationBtn = driver.findElementByAccessibilityId("Show navigation drawer")
+        navigationBtn.click()
+
+        wait.until { driver.findElementByXPath("//android.view.ViewGroup[@content-desc=\"Dark mode\"]/android.widget.ImageView").isDisplayed }
+        val changeThemeBtn = driver.findElementByXPath("//android.view.ViewGroup[@content-desc=\"Dark mode\"]/android.widget.ImageView")
+        changeThemeBtn.click()
+    }
+
     @AfterAll
     fun afterAll() {
         driver.quit()
